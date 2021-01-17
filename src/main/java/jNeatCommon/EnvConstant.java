@@ -17,10 +17,10 @@ public class EnvConstant {
 	public static String JNEAT_DIR = "c:\\jneat\\dati ";
 
 	// current file name for parameter single without dir o other)
-	public static String NAME_PARAMETER = "parametri";
+	public static String NAME_PARAMETER = "src\\main\\resources\\parametri";
 
 	// current file name for parameter single without dir o other)
-	public static String NAME_SESSION = "session";
+	public static String NAME_SESSION = "src\\main\\resources\\session";
 
 	// current full data set name file parametri
 	//   public static String DSN_PARAMETER = "xxx";

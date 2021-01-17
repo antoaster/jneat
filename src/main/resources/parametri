@@ -19,7 +19,7 @@ p_mutate_toggle_enable_prob  0.0
 p_mutate_gene_reenable_prob  0.0
 p_mutate_add_node_prob  0.03
 p_mutate_add_link_prob  0.08
-p_interspecies_mate_rate  0.0010
+p_interspecies_mate_rate  0.001
 p_mate_multipoint_prob  0.3
 p_mate_multipoint_avg_prob  0.3
 p_mate_singlepoint_prob  0.3
