@@ -1,18 +1,18 @@
 package gui;
 
 import java.io.*;
+
 public class MyClassLoader extends ClassLoader {
-/**
- * MyClassLoader constructor comment.
- */
-public MyClassLoader() {
-	super();
-}
+    /**
+     * MyClassLoader constructor comment.
+     */
+    public MyClassLoader() {
+        super();
+    }
 
-public synchronized Class loadClass(String _name)
-{
+    public synchronized Class loadClass(String _name) {
 
-	throw new UnsupportedOperationException("Boom for " + _name);
+        throw new UnsupportedOperationException("Boom for " + _name);
 	/*FileInputStream fi = null;
 	try
 	{
@@ -37,11 +37,8 @@ public synchronized Class loadClass(String _name)
 		System.exit(8);
 		return null;
 	}*/
-	
-}
 
-
-
+    }
 
 
 }
