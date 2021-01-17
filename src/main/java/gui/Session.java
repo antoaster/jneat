@@ -1118,10 +1118,14 @@
 	  // jdk 1.3.1_01
 	  //
 	  
+/*
 	  com.sun.tools.javac.Main m1 = new com.sun.tools.javac.Main();
 	  m1.compile(source);
 	  System.setErr(ps);
-	  
+
+*/
+	  if (true) throw new RuntimeException("I was hoping it wouldn't get here...");
+
 	  Date xdata = new Date();
 	  if (baos.toString().indexOf("error")==-1)
 	  	return true;
