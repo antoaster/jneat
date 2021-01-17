@@ -11,7 +11,9 @@ public MyClassLoader() {
 
 public synchronized Class loadClass(String _name)
 {
-	FileInputStream fi = null;
+
+	throw new UnsupportedOperationException("Boom for " + _name);
+	/*FileInputStream fi = null;
 	try
 	{
 		String _fname = jNeatCommon.EnvRoutine.getJneatFile(_name);
@@ -34,7 +36,7 @@ public synchronized Class loadClass(String _name)
 		System.out.print("\n errore su loadclass"+_name+" : \n"+e);
 		System.exit(8);
 		return null;
-	}
+	}*/
 	
 }
 

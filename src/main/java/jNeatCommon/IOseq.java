@@ -116,6 +116,8 @@
 			bR = new BufferedReader(fR);
 		 } 
 			 catch (Exception evt) {
+				 evt.printStackTrace();
+
 //			   System.out.println("Error in jSeqOpenR : " + evt);
 			   return false;
 			}

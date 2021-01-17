@@ -173,6 +173,7 @@ public boolean createNetwork()
 		
 		catch (Throwable e) 
 		{
+			e.printStackTrace();
 			System.out.print("\n execution: : error during read " + EnvConstant.NAME_OF_GENOME_FOR_EXECUTION + " file "  + e); 
 			return false;
 		}
@@ -296,6 +297,7 @@ public boolean createNetwork()
 	
 	catch (Exception e2) 
 	{
+		e2.printStackTrace();
 		System.out.print(
 			"\n Error(1) generic in execution.executeForClass: code " + e2); 
 		return;
@@ -468,7 +470,8 @@ public boolean createNetwork()
 	
 	catch (Exception e2) 
 	{
-		System.out.print("\n Error(2) generic in execution.executeForClass: code " + e2); 
+		e2.printStackTrace();
+		System.out.print("\n Error(2) generic in execution.executeForClass: code " + e2);
 		return;
 	}
 
@@ -508,7 +511,8 @@ public boolean createNetwork()
 	
 	catch (Exception e2) 
 	{
-		System.out.print("\n Error(3) generic in execution.executeForClass: code " + e2); 
+		e2.printStackTrace();
+		System.out.print("\n Error(3) generic in execution.executeForClass: code " + e2);
 		return;
 	}
 
@@ -592,7 +596,8 @@ public boolean createNetwork()
 	
 	catch (Exception e2) 
 	{
-		System.out.print("\n Error(1) generic in execution.executeForFile: code " + e2); 
+		e2.printStackTrace();
+		System.out.print("\n Error(1) generic in execution.executeForFile: code " + e2);
 		return;
 	}
 
@@ -787,7 +792,8 @@ public boolean createNetwork()
 	
 	catch (Exception e2) 
 	{
-		System.out.print("\n Error(3) generic in execution.executeForFile: code " + e2); 
+		e2.printStackTrace();
+		System.out.print("\n Error(3) generic in execution.executeForFile: code " + e2);
 		return;
 	}
 

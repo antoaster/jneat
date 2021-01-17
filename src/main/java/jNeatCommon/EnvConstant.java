@@ -29,7 +29,7 @@ public class EnvConstant {
 	//   public static String DSN_SESSION = "xxx";
 
 	// name of sub-directory for genome, population winner others...
-	public static String DSN_DIR_DATA = "data";
+	public static String DSN_DIR_DATA = "src\\main\\resources\\data";
 
 	// character for composing full dsn : is a separator for this system
 

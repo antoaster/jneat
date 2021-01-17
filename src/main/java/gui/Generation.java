@@ -366,7 +366,8 @@
 		 
 			 catch (Exception ex) 
 			{
-			   System.err.println("ERRORE");
+				ex.printStackTrace();
+				System.err.println("ERRORE");
 			}
 	  
 	  
@@ -499,7 +500,8 @@ public void itemStateChanged(ItemEvent e) {
 		 
 			 catch (Throwable e1) 
 			{
-			   logger.sendToLog(" generation: error during generation.startProcess() :"+e1);
+				e1.printStackTrace();
+				logger.sendToLog(" generation: error during generation.startProcess() :"+e1);
 			}
 	  
 	  
@@ -1582,7 +1584,7 @@ public void itemStateChanged(ItemEvent e) {
 		 
 			 catch (Exception e) 
 			{
-			
+				e.printStackTrace();
 			   System.out.print("\n exception in generation.epoch ->" + e);
 			   System.exit(12);
 			   return false;
@@ -1739,7 +1741,7 @@ public void itemStateChanged(ItemEvent e) {
 		 double _x2 = 0.0;
 		 double _y2 = 0.0;
 	  
-		 Iterator itr_fit = v1_fitness.iterator();
+		 Iterator itr_fit = new ArrayList(v1_fitness).iterator();
 		 boolean first_time = true;
 		 while (itr_fit.hasNext()) 
 		 {
@@ -1786,7 +1788,7 @@ public void itemStateChanged(ItemEvent e) {
 		 _x2 = 0.0;
 		 _y2 = 0.0;
 	  
-		 itr_fit = v1_fitness_win.iterator();
+		 itr_fit = new ArrayList(v1_fitness_win).iterator();
 		 first_time = true;
 		 while (itr_fit.hasNext()) 
 		 {
