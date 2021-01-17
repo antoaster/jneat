@@ -1367,10 +1367,6 @@ public void setSourceNew(String[] _source) {
 			       }
 				}
 
-
-
-
-				
 				if ((prev_word != null)
 					&& (prev_word.equalsIgnoreCase("class_compute_fitness"))) {
 					curr_fitness_class = new String(elem);

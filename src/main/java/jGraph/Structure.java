@@ -32,7 +32,7 @@
    
    
 	 // vettore contenente ref a oggetti plane
-	 // tale vettore una volta costruito servirà per comporre
+	 // tale vettore una volta costruito servirÃ  per comporre
 	 // la matrice di rappresentazione del grafo
 	  Vector vPlane;
    
@@ -583,7 +583,7 @@
 			//		 System.out.print("\n diff = " + diff_level);
 			
 			
-			// curr_edge_id = nome del lato che si stà analizzando
+			// curr_edge_id = nome del lato che si stÃ  analizzando
 			   curr_edge_id = _edge.name;
 			
 			
@@ -604,8 +604,8 @@
 				  
 					 virtP = new Vertex(0, 0, 4, hi_node_name++);
 				  
-				  // dato che il nodo è connesso in una catena singola ed unica
-				  // il group id dei vertici è il nome del lato che li connette
+				  // dato che il nodo Ã¨ connesso in una catena singola ed unica
+				  // il group id dei vertici Ã¨ il nome del lato che li connette
 					 virtP.edge_id = curr_edge_id;
 				  
 					 virtP.level = livello;
@@ -684,8 +684,8 @@
 				  {
 					 virtP = new Vertex(0, 0, 4, hi_node_name++);
 				  
-				  // dato che il nodo è connesso in una catena singola ed unica
-				  // il group id dei vertici è il nome del lato che li connette
+				  // dato che il nodo Ã¨ connesso in una catena singola ed unica
+				  // il group id dei vertici Ã¨ il nome del lato che li connette
 					 virtP.edge_id = curr_edge_id;
 				  
 					 virtP.level = livello;
@@ -781,7 +781,7 @@
 			   xdim = v_mXY.dim_x;
 			   ydim = _plane.getLevelOfNodes();
 			
-			//	     System.out.print("\n Il piano di livello "+_plane.level +" ha "+_plane.dim_y+" righe  e avrà "+xdim+" colonne");
+			//	     System.out.print("\n Il piano di livello "+_plane.level +" ha "+_plane.dim_y+" righe  e avrÃ  "+xdim+" colonne");
 			   _plane.setPlane(xdim,v_mXY.m[ydim]);
 			}
 			else
@@ -873,7 +873,7 @@
 				  
 				  //		       System.out.print("\n delta calcolato = "+delta);
 				  
-				  // curr_edge_id = nome del lato che si stà analizzando
+				  // curr_edge_id = nome del lato che si stÃ  analizzando
 					 curr_edge_id = _edge.name;
 					 virtP = null;
 				  
@@ -891,8 +891,8 @@
 						{
 						
 						   virtP = new Vertex(0, 0, 4, hi_node_name++);
-						// dato che il nodo è connesso in una catena singola ed unica
-						// il group id dei vertici è il nome del lato che li connette
+						// dato che il nodo Ã¨ connesso in una catena singola ed unica
+						// il group id dei vertici Ã¨ il nome del lato che li connette
 						   virtP.edge_id = curr_edge_id;
 						   virtP.gx = colonna;
 						
@@ -979,8 +979,8 @@
 						{
 						
 						   virtP = new Vertex(0, 0, 4, hi_node_name++);
-						// dato che il nodo è connesso in una catena singola ed unica
-						// il group id dei vertici è il nome del lato che li connette
+						// dato che il nodo Ã¨ connesso in una catena singola ed unica
+						// il group id dei vertici Ã¨ il nome del lato che li connette
 						   virtP.edge_id = curr_edge_id;
 						   virtP.gx = colonna;
 						
@@ -1105,7 +1105,7 @@
 	  }/**
    * calcola il numero massimo di k-levels
    * per determinare quante righe dovranno essere definite su mXY
-   * alla fine , quindi , è determinato depth_y = al numero REALE di livelli
+   * alla fine , quindi , Ã¨ determinato depth_y = al numero REALE di livelli
    * che quindi si estenderanno tra 0 e (depth_y-1)
    */                                   
    
@@ -1141,7 +1141,7 @@
 	  
 	  /*   
 	  
-	  System.out.print("\n Dopo primo calcolo da out verso input la situazione è : "+max_b);
+	  System.out.print("\n Dopo primo calcolo da out verso input la situazione Ã¨ : "+max_b);
 	  System.out.print("\n ******************************************************");
 	  view();
 	  
@@ -1167,7 +1167,7 @@
 	  
 	  /*   
 	  
-	  System.out.print("\n Dopo primo calcolo da inp  verso output  la situazione è : "+max_b);
+	  System.out.print("\n Dopo primo calcolo da inp  verso output  la situazione Ã¨ : "+max_b);
 	  System.out.print("\n ******************************************************");
 	  //	  view();
 	  System.out.print("\n ******* compute.depth.y : max altitude_b =  "+max_b);
@@ -1285,7 +1285,7 @@
 	  
 	  // a questo punto si esaminano i nodi dall'alto verso il basse e viceversa
 	  // per ogni nodo non impostato :
-	  // se il predecessore  non è  settato cioè se  non ha valori impostati cioe level = -1 e altitude = -1
+	  // se il predecessore  non ï¿½  settato cioï¿½ se  non ha valori impostati cioe level = -1 e altitude = -1
 	  // al predecessore viene assegnato il livello in funzione del suo predecessore , si flagga
 	  // una variabile come changed e si ricomincia
 	  // stessa cosa andando in senso opposto
@@ -1311,9 +1311,9 @@
 			//  	       System.out.print(" che ha level = "+ _Vertex.level+" altitude = "+_Vertex.altitude);
 			
 			
-			// cerca il nodo più in basso verso cui il nodo è collegato
+			// cerca il nodo piï¿½ in basso verso cui il nodo ï¿½ collegato
 			// per fare questo esamino i nodi in uscita e vedo quale tra questi ha il
-			// altitude più bassa o livello più alto;
+			// altitude piï¿½ bassa o livello piï¿½ alto;
 			
 			   if ((_Vertex.level == -1 ) && (_Vertex.altitude == -1))
 			   {
@@ -1339,7 +1339,7 @@
 						}
 					 }
 				  }
-			   // se found = true allora il nodo _Vz è il più vicino
+			   // se found = true allora il nodo _Vz ï¿½ il piï¿½ vicino
 			   // per cui _Vertex viene collegato a tale nodo ad una
 			   // quota = quota - 1 
 				  if (found)
@@ -1465,13 +1465,13 @@
 	  
 	  
 	  
-	  // per il momento non vengono visualizzati nodi che sono al di sotto dei sensori anche perchè
+	  // per il momento non vengono visualizzati nodi che sono al di sotto dei sensori anche perchï¿½
 	  // non si attiveranno mai in quanto nessuno gli passa un valore
 	  // stessa cosa per i nodi che si estandono oltre i nodi di output
 	  // per fare questo si suppone che dopo quanto fatto sopra restino proprio tali nodi
 	  // o al massimo i nodi isolati da tutti o reti interne isolate che per
 	  // tale applicazione al momento non sembrano essenziali.
-	  // (potrebbero cioè esistere delle sub-network internamente alla rete funzionante;
+	  // (potrebbero cioï¿½ esistere delle sub-network internamente alla rete funzionante;
 	  // tali sub-network potrebbero essere "l'inconscio" della rete e in presenza di
 	  // crossing con altre reti alterare profondamente il compostamento della rete)
 	  // procediamo ad eliminare sia i nodi senza coordinate , segnalandoli, sia i link
@@ -1537,7 +1537,7 @@
 	  
 	  }/**
    * legge le connesioni e se trova una connessione con nodi di pari livello
-   * allora tale connessione è intrastrato
+   * allora tale connessione ï¿½ intrastrato
    * in questo caso tutti i nodi di quel livello sono memorizzati nel piano
    */                                
 	   public void create_plane() 
@@ -1573,9 +1573,9 @@
 			}
 		 
 		 // in base alle connessioni genera un piano XY con tante righe quante sono le connessioni
-		 // intra-strato , memorizzando anche i nodi per i quali dovrà essere ricalcolato il livello
+		 // intra-strato , memorizzando anche i nodi per i quali dovrï¿½ essere ricalcolato il livello
 		 // in quanto dovranmno fare posto alle connessioni  intra-strato
-		 // per fare ciò legge i nodi del livello trovato e li memorizza su un vettore;
+		 // per fare ciï¿½ legge i nodi del livello trovato e li memorizza su un vettore;
 		 
 		 
 			Vector vx = new Vector(1, 0);
@@ -1669,7 +1669,7 @@
 	  
 	  
 	   // genera i vertici virtuali e gli edge virtuali che sostituiscono connessioni
-	   // verticali distanti più di un livello
+	   // verticali distanti piï¿½ di un livello
 		 generate_virtual_Vertex_Edge_vertical();
 	  
 	  
@@ -1936,7 +1936,7 @@
 			
 			
 			// verifica se tutti i nodi della row coorente sono virtuali
-			// se si allora la distanza dalla precedente row è minore
+			// se si allora la distanza dalla precedente row ï¿½ minore
 			
 			   only_virtual2 = true;
 			   found2 = false;

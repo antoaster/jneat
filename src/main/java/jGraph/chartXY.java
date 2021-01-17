@@ -178,7 +178,7 @@ public void updateConstant()
 			mb = max_x;
 
 		
-	     // vengono calcolati 2 tipi tali di coefficienti di proporzionalit‡
+	     // vengono calcolati 2 tipi tali di coefficienti di proporzionalit√†
 	     // 1) plot_k* per le curve
 	     // 2) k* per i grafi in cui si forza x == y
 	     // (nella curva avremo : 
@@ -1132,7 +1132,7 @@ public void drawAxis( String s, int tipo)
 			0); 
 	g2.setStroke(stroke);
 
-	// calcola quanto spazio Ë occupato dalle label numeriche
+	// calcola quanto spazio √® occupato dalle label numeriche
 	//  di riferimento ai valori delle curve tracciate
 
 	FontMetrics fm = g2.getFontMetrics();

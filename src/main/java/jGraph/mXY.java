@@ -179,7 +179,7 @@
 	  
 	  
 	  //
-	  // alloca la matrice che conterr‡ i nodi e marca i punti
+	  // alloca la matrice che conterr√† i nodi e marca i punti
 	  // come m'not traversed'
 	  //
 	  
@@ -270,7 +270,7 @@
 	  
 	  //
 	  // Questa prima fase sistema il primo link tra out e out-1
-	  // per fare ciÚ legge la riga e ogni volta che trova un nodo
+	  // per fare ci√≤ legge la riga e ogni volta che trova un nodo
 	  // 
 	  // -moltiplica un progressivo per lo spostamento (dx);
 	  // -somma a tale valore lo spiazzamento iniziale
@@ -300,7 +300,7 @@
 			// cerca il primo nodo discendente e lo piazza su stessa ascissa
 			// provando a mettere prima un nodo reale ;
 			// se non lo trova tenta con uno virtuale;
-			// se non lo trova non f‡ nulla e passa al nodo successivo
+			// se non lo trova non f√† nulla e passa al nodo successivo
 			// 
 			   size_inp = _o.neighbors_inp.size();
 			
@@ -339,7 +339,7 @@
 			
 			//
 			// se esiste un nodo real lo imposta esattamente sotto il nodo
-			// e lo marca come gi‡ fatto.
+			// e lo marca come gi√† fatto.
 			//
 			   if (_p_real != null) 
 			   {
@@ -354,7 +354,7 @@
 			   
 			   //
 			   // se non esiste un nodo real e trova un nodo virtuale lo posiziona sotto il nodo
-			   // e lo marca come gi‡ fatto.
+			   // e lo marca come gi√† fatto.
 			   //
 			   else if (_p_virt != null) 
 			   {
@@ -365,8 +365,8 @@
 			   } 
 			   
 			   //
-			   // questo Ë il caso in cui il nodo di output non ha connessioni
-			   // verso alcuno per cui lo lascia stare come Ë!
+			   // questo √® il caso in cui il nodo di output non ha connessioni
+			   // verso alcuno per cui lo lascia stare come √®!
 			   //
 			   else 
 			   {
@@ -382,7 +382,7 @@
 	  
 	  // 
 	  //
-	  // era dim_y-1 ora Ë dim_y
+	  // era dim_y-1 ora √® dim_y
 	  //
 		 for (int layer = 0; layer < (dim_y-1) ; layer++) 
 		 {
@@ -400,14 +400,14 @@
 		 //   -verifica se ha figli
 		 //    se non passa al nodo successivo
 		 //    se si :
-		 //       verifica i figli e al primo figlio , cioË nodo nel layer
+		 //       verifica i figli e al primo figlio , cio√® nodo nel layer
 		 //       successivo , che trova come non marcato, cerca un posto
 		 //       partendo dalla posizione immediatamente sotto il nodo e
 		 //       procedendo a spirale fino a trovare un buco disponibile a
 		 //       destra o a sinistra del nodo
 		 //       una volta ppiazzato il figlio , passa di nuovo al layer 0 e piazza i restanti
 		 //       nodi ;
-		 // Il motivo per cui non piazza subito tutti i nodi Ë che se si agisse in tale senso
+		 // Il motivo per cui non piazza subito tutti i nodi √® che se si agisse in tale senso
 		 // non sarebbe facile , poi , distribuire i nodi in modo uniforme sotto i propri padri.
 		 // 
 		 
@@ -432,7 +432,7 @@
 			   //   distanza e poi i figli con maggiore distanza ;
 			   // in questo modo  eventuali nodi reali che sono stati splittati fuori
 			   // potrebbero tornare ad essere prioritari
-			   // quindi  la prima cosa da fare Ë :
+			   // quindi  la prima cosa da fare √® :
 			   // in base al nodo  , alla lista dei figli, alla lista dei nodi successivi :
 			   //   per ogni nodo successivo che sia figlio e sia libero determina
 			   //   path fino al primo nodo virtuale
@@ -539,9 +539,9 @@
 							  } 
 						   
 						   /*						else if (!(_o.has_child(_py)))
-						   System.out.print("\n    -> scarto " + _py.name + " perchË non Ë figlio di " + _o.name); 
+						   System.out.print("\n    -> scarto " + _py.name + " perch√® non √® figlio di " + _o.name); 
 						   else if (_py.is_traversed)
-						   System.out.print("\n    -> scarto " + _py.name + " perchË gi‡ fatto");
+						   System.out.print("\n    -> scarto " + _py.name + " perch√® gi√† fatto");
 						   */
 						   }
 						
@@ -559,7 +559,7 @@
 						// sommata alla funzione spirale; 
 						// dato che per costruzione il numero di colonne = al massimo numero di nodi il posto
 						// deve essere trovato;
-						// se cosÏ non Ë allora esiste un errore nel calcolo o del baricentro o dell'assegnazione dei
+						// se cos√¨ non √® allora esiste un errore nel calcolo o del baricentro o dell'assegnazione dei
 						// nodi
 						//
 						   int max_range = dim_x * 2;
@@ -569,16 +569,16 @@
 						   //
 							  raggio = GrafRoutine.spiral(k) + center;
 						   
-						   //						System.out.print("\n vedo se su matrix["+Lb+"]["+raggio + "] c'Ë posto!");
+						   //						System.out.print("\n vedo se su matrix["+Lb+"]["+raggio + "] c'√® posto!");
 						   
 						   // verifico che il raggio sia corretto
 						   //
 							  if ((raggio >= 0) && (raggio < dim_x)) 
 							  {
 							  
-							  // se raggio Ë nei limiti allora verifico se il posto Ë disponibile
+							  // se raggio √® nei limiti allora verifico se il posto √® disponibile
 							  //
-							  //						   System.out.print("\n    okay indice " + raggio+" corretto : verifico se matrix["+raggio+"] Ë libero!");
+							  //						   System.out.print("\n    okay indice " + raggio+" corretto : verifico se matrix["+raggio+"] √® libero!");
 								 _pb = matrix[Lb][raggio];
 								 if (_pb == null) 
 								 {
@@ -624,7 +624,7 @@
 		 // sistemazione degli orfani , vale a dire dei nodi
 		 // che non sono figli del padre in questa generazione
 		 // per quanto possibile bengono messi in una posizione
-		 // pi˘ centrale possibile
+		 // pi√π centrale possibile
 		 
 		 
 			for (iB = 0; iB < dim_x; iB++) 
@@ -643,16 +643,16 @@
 					 //
 						raggio = GrafRoutine.spiral(k) + center;
 					 
-					 //						System.out.print("\n vedo se su matrix["+Lb+"]["+raggio + "] c'Ë posto!");
+					 //						System.out.print("\n vedo se su matrix["+Lb+"]["+raggio + "] c'√® posto!");
 					 
 					 // verifico che il raggio sia corretto
 					 //
 						if ((raggio >= 0) && (raggio < dim_x)) 
 						{
 						
-						// se raggio Ë nei limiti allora verifico se il posto Ë disponibile
+						// se raggio √® nei limiti allora verifico se il posto √® disponibile
 						//
-						//						   System.out.print("\n    okay indice " + raggio+" corretto : verifico se matrix["+raggio+"] Ë libero!");
+						//						   System.out.print("\n    okay indice " + raggio+" corretto : verifico se matrix["+raggio+"] √® libero!");
 						   _pb = matrix[Lb][raggio];
 						   if (_pb == null) 
 						   {
@@ -697,7 +697,7 @@
 		 
 		 //
 		 // A questo punto ipoteca i nodi virtuali estendendo le coordinate verso il basso
-		 // In pratica cerca i nodi virtuali su Lb e se il nodo Ë una estensione di un link
+		 // In pratica cerca i nodi virtuali su Lb e se il nodo √® una estensione di un link
 		 // con len > 1 , lo propaga su matrix, con la stessa ascissa e ordintata crescente
 		 // verso il basso , fino alla sua origine
 		 //
@@ -709,12 +709,12 @@
 			   _o = m[Lb][iB];
 			   if (_o != null) 
 			   {
-			   // il nodo Ë virtuale? 
+			   // il nodo √® virtuale? 
 			   //
 				  if (_o.is_virtual()) 
 				  //			if (_o.type == 4) 
 				  {
-				  // okay nodo virtuale , vedo se f‡ parte un gruppo di nodi virtuali
+				  // okay nodo virtuale , vedo se f√† parte un gruppo di nodi virtuali
 				  // che rappresentano un lato di len > 1
 				  //
 				  //			   System.out.print("\n calcola figli virtuali di  ->" + _o.name);
@@ -735,7 +735,7 @@
 						{
 						   Vertex e = (Vertex) l.elementAt(i);
 						//					 System.out.print("\n leggo elem(" + i + ") = " + e.name);
-						// se il nodo non Ë stato marcato lo imposta come marcato e
+						// se il nodo non √® stato marcato lo imposta come marcato e
 						// imposta il suo baricentro
 						//
 						   if (!e.is_traversed) 

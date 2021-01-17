@@ -1,4 +1,6 @@
-public class fitness_parity { 
+package gui;
+
+public class fitness_parity {
  
   public static double getMaxFitness() { return Math.pow (8.0, 2); } 
  

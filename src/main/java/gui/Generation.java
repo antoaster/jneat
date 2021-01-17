@@ -920,8 +920,8 @@ public void itemStateChanged(ItemEvent e) {
 	  // le classi di copdifica input e output quindi dovranno fornire due
 	  // metodi : uno per restituire l'input j-esimo e uno per restituire
 	  // il numero di ingressi/uscite
-	  // se I/O � da file allora � il metodo di acesso ai files che avr� lo
-	  // stesso nome e che far� la stessa cosa.
+	  // se I/O Ã¨ da file allora Ã¨ il metodo di acesso ai files che avrÃ  lo
+	  // stesso nome e che farÃ  la stessa cosa.
 	  
 		 Network _net = null;
 		 boolean success = false;
@@ -1250,7 +1250,7 @@ public void itemStateChanged(ItemEvent e) {
 							  elem = riga.nextToken();
 							  double v1 = Double.parseDouble(elem);
 							  tgt[count][j] = v1;
-						   //					  System.out.print("\n per epoch "+count+" tgt("+j+"�) = "+v1);
+						   //					  System.out.print("\n per epoch "+count+" tgt("+j+"Â£) = "+v1);
 						   }
 						   count++;
 						}

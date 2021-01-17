@@ -29,10 +29,10 @@
 		 Vertex _tmp;
 		 int real_group_id = 0;
 	  
-	  // il nodo passato Ë virtuale.
+	  // il nodo passato √® virtuale.
 	  // dato che i nodi virtuali hanno uno e un solo lato a loro connessi viene
 	  // calcolata tutta la catena di vertici virtuali fino al nodo reale ,(che viene escluso).
-	  // per fare questo , viene calcolato l'id del lato reale, inactive, che Ë stato
+	  // per fare questo , viene calcolato l'id del lato reale, inactive, che √® stato
 	  // sostituito dai lati virtuali , vale a dire .'id di gruppo.
 	  // quindi in base all'id  di gruppo viene calcolato il nodo predecessore del nodo
 	  // corrente e ricorsivamente viene scorsa la catena fino ad arrivare al nodo reale.
@@ -42,7 +42,7 @@
 	  
 		 if (real_group_id == 0)
 		 {
-		 //	   System.out.print("\n **L** : il nodo passato Ë reale ......");
+		 //	   System.out.print("\n **L** : il nodo passato √® reale ......");
 			return _l;
 		 }
 	  
@@ -92,17 +92,17 @@
 	  
 		 real_group_id = _p.edge_id;
 	  
-	  // il nodo passato puÚ essere reale o virtuale ;
+	  // il nodo passato pu√≤ essere reale o virtuale ;
 	  // nel caso sia reale il group_id = 0 , e di conseguenza la distanza vale 0;
-	  // (vengono cosÏ privilegiati i nodi reali a distanza 1 e poi i nodi virtuali!).
-	  // Se invece il punto _p , Ë virtuale, tale routine  , viene chiamata solo
+	  // (vengono cos√¨ privilegiati i nodi reali a distanza 1 e poi i nodi virtuali!).
+	  // Se invece il punto _p , √® virtuale, tale routine  , viene chiamata solo
 	  // per i nodi che sono su distanze > 1; 
 	  // dato che il punto _p ,  identifica un gruppo , in base all'id  di gruppo
 	  // viene calcolato il nodo predecessore del nodo corrente e ricorsivamente viene 
 	  // scorsa la catena fino ad arrivare al nodo reale;
 	  // dato che ad ogni chiamata ricorsiva viene incrementato il path-length alla fine viene
-	  // ritornato proprio tale valore che Ë la distanza tra il nodo iniziale e quello 
-	  // all'estremit‡ opposta.
+	  // ritornato proprio tale valore che √® la distanza tra il nodo iniziale e quello 
+	  // all'estremit√† opposta.
 	  
 		 if (real_group_id == 0)
 		 {

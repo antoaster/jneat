@@ -1,3 +1,5 @@
+package gui;
+
 public class bin_inp {
  
    public static int getNumSamples() { return 4; } 
