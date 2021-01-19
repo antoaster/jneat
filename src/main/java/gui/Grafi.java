@@ -399,7 +399,7 @@ public class Grafi extends JPanel implements ActionListener, ListSelectionListen
                 n = Popx.getOrganisms().size();
                 listdata.clear();
                 for (int j = 0; j < n; j++) {
-                    _ox = (Organism) Popx.getOrganisms().elementAt(j);
+                    _ox = Popx.getOrganisms().get(j);
                     _g1 = _ox.getGenome();
                     _id = _g1.getGenome_id();
                     _s = " Genome_" + _id + " ";
@@ -431,7 +431,7 @@ public class Grafi extends JPanel implements ActionListener, ListSelectionListen
                 n = Popx.getOrganisms().size();
                 listdata.clear();
                 for (int j = 0; j < n; j++) {
-                    _ox = (Organism) Popx.getOrganisms().elementAt(j);
+                    _ox = (Organism) Popx.getOrganisms().get(j);
                     _g1 = _ox.getGenome();
                     _id = _g1.getGenome_id();
                     _s = " Genome_" + _id + " ";
@@ -473,7 +473,7 @@ public class Grafi extends JPanel implements ActionListener, ListSelectionListen
 
                 i1 = jList1.getSelectedIndex();
                 s2 = jList1.getSelectedValue().toString();
-                _ox = (Organism) Popx.getOrganisms().elementAt(i1);
+                _ox = (Organism) Popx.getOrganisms().get(i1);
                 _g1 = _ox.getGenome();
                 EnvConstant.NAME_OF_GENOME_FOR_EXECUTION = s2;
                 EnvConstant.CURR_GENOME_RUNNING = _g1;

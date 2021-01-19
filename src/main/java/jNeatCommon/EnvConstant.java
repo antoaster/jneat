@@ -1,5 +1,9 @@
 package jNeatCommon;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /**
  * Insert the type's description here.
  * Creation date: (21/03/2002 13.55.19)
@@ -30,6 +34,17 @@ public class EnvConstant {
     //   public static String DSN_SESSION = "xxx";
 
     // name of sub-directory for genome, population winner others...
+    private static Path tempDirWithPrefix;
+    static {
+        try {
+            tempDirWithPrefix = Files.createTempDirectory("jneat");
+            System.out.println("Temp dir: " + tempDirWithPrefix.toAbsolutePath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static String TMPDIR = tempDirWithPrefix.toAbsolutePath().toString();
+
     public static String DSN_DIR_DATA = "src\\main\\resources\\data";
 
     // character for composing full dsn : is a separator for this system

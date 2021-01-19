@@ -32,11 +32,8 @@ public class EnvRoutine {
         return n2;
     }
 
-    public static String getJneatGenomeBaseOld() {
-
-        String n1 = EnvConstant.JNEAT_DIR;
-        String n2 = n1 + EnvConstant.OS_FILE_SEP + EnvConstant.DSN_DIR_DATA + EnvConstant.OS_FILE_SEP + EnvConstant.NAME_GENOMEA;
-        return n2;
+    public static String getJneatTempFile(String _fname) {
+        return EnvConstant.TMPDIR + EnvConstant.OS_FILE_SEP + _fname;
     }
 
     public static String getJneatParameter() {

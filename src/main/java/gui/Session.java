@@ -151,37 +151,6 @@ public class Session extends JPanel implements ActionListener {
             {"normal", "italic", "bold", "bold-italic"};
 
 
-    final static String[] initFitness =
-            {
-                    "public class xor_fit { \n",
-                    " \n",
-                    "  public static double getMaxFitness() { return Math.pow (4.0, 2); } \n",
-                    " \n",
-                    "  public static double[]  computeFitness(int _sample, int _num_nodes, double _out[][], double _tgt[][]) \n",
-                    "  {",
-                    "     double d[] = new double[3]; \n",
-                    "     double errorsum = 0.0; \n",
-                    "     double fitness; \n",
-                    "     for ( int j = 0; j < _sample; j++) \n",
-                    "        { \n",
-                    "           errorsum  += ( double ) (Math.abs(_tgt[j][0] - _out[j][0])); \n",
-                    "        } \n",
-                    "     fitness = Math.pow ( ( 4.0 - errorsum ) , 2 ); \n",
-                    " \n",
-                    "     d[0] = fitness; \n",
-                    "     d[1] = errorsum; \n",
-                    "     d[2] = 0.0; \n",
-                    " \n",
-                    "     if ((_out[0][0] < 0.5) && (_out[1][0] >= 0.5) &&  \n",
-                    "            (_out[2][0] >= 0.5) && (_out[3][0] < 0.5)) \n",
-                    "        d[2] = 1.0; \n",
-                    " \n",
-                    "     return d; \n",
-                    "  } \n",
-                    "} \n"
-
-            };
-
     final static String[] initDataClassInput =
             {
                     "public class bin_inp {\n",
@@ -738,15 +707,6 @@ public class Session extends JPanel implements ActionListener {
             textPane1.setText("");
             setSourceNew(default_source);
             logger.sendToLog(" session: set to default skeleton for session");
-            logger.sendToStatus("READY");
-        } else if (e.getActionCommand().equals(" Set fitness class skeleton ")) {
-            logger.sendToStatus("wait...");
-            EnvConstant.EDIT_STATUS = EnvConstant.EDIT_CLASS_FIT;
-            textPane1.setText("");
-
-            setSourceNew(initFitness);
-
-            logger.sendToLog(" session: set to default skeleton for fitness");
             logger.sendToStatus("READY");
         } else if (e.getActionCommand().equals(" Set data_inp class skeleton ")) {
             logger.sendToStatus("wait...");

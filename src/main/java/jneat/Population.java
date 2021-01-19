@@ -15,17 +15,17 @@ public class Population extends Neat {
     /**
      * The organisms in the Population
      */
-    public Vector organisms;
+    public List<Organism> organisms;
 
     /**
      * Species in the Population the species should comprise all the genomes
      */
-    public Vector species;
+    public List<Species> species;
 
     /**
      * For holding the genetic innovations of the newest generation
      */
-    Vector innovations = new Vector(1, 0);
+    List<Innovation> innovations = new ArrayList<>();
 
     /**
      * Current label number available for nodes
@@ -78,7 +78,7 @@ public class Population extends Neat {
      */
     int highest_last_changed;
 
-    public Vector getOrganisms() {
+    public List<Organism> getOrganisms() {
         return organisms;
     }
 
@@ -86,7 +86,7 @@ public class Population extends Neat {
         this.organisms = organisms;
     }
 
-    public Vector getSpecies() {
+    public List<Species> getSpecies() {
         return species;
     }
 
@@ -94,7 +94,7 @@ public class Population extends Neat {
         this.species = species;
     }
 
-    public Vector getInnovations() {
+    public List<Innovation> getInnovations() {
         return innovations;
     }
 
@@ -227,7 +227,7 @@ public class Population extends Neat {
             _organism.viewtext();
         }
 
-        Iterator itr_specie = species.iterator();
+        Iterator<Species> itr_specie = species.iterator();
         itr_specie = species.iterator();
 
         while (itr_specie.hasNext()) {
@@ -243,7 +243,7 @@ public class Population extends Neat {
      */
     public void epoch(int generation) {
 
-        Iterator itr_specie;
+        Iterator<Species> itr_specie;
         Iterator itr_organism;
         double total = 0.0;
         //double total_expected=0.0;
@@ -575,7 +575,7 @@ public class Population extends Neat {
         }
         // ---------- phase of elimination of organism with flag eliminate ------------
         itr_organism = organisms.iterator();
-        Vector vdel = new Vector(organisms.size());
+        List<Organism> vdel = new ArrayList<>();
 
         while (itr_organism.hasNext()) {
             Organism _organism = ((Organism) itr_organism.next());
@@ -588,12 +588,7 @@ public class Population extends Neat {
             }
         }
         //eliminate organism from master list
-        for (int i = 0; i < vdel.size(); i++) {
-            Organism _organism = (Organism) vdel.elementAt(i);
-            //  		organisms.remove(_organism);
-            organisms.removeElement(_organism);
-        }
-
+        organisms.removeAll(vdel);
 
         vdel.clear();
 
@@ -675,7 +670,7 @@ public class Population extends Neat {
         itr_specie = species.iterator();
         int i_specie = 0;
 
-        vdel = new Vector(species.size());
+        List<Species> speciesToDelete = new ArrayList<>();
         orgcount = 0;
 
         while (itr_specie.hasNext()) {
@@ -683,7 +678,7 @@ public class Population extends Neat {
             size_of_curr_specie = _specie.organisms.size();
             i_specie++;
             if (size_of_curr_specie == 0)
-                vdel.add(_specie);
+                speciesToDelete.add(_specie);
             else {
                 //Age any Species that is not newly created in this generation
                 if (_specie.novel)
@@ -702,14 +697,9 @@ public class Population extends Neat {
             }
         }
 
-        // System.out.print("\n the number of species can be eliminated is "+vdel.size());
+        // System.out.print("\n the number of species can be eliminated is "+speciesToDelete.size());
         //eliminate species marked from master list
-        for (int i = 0; i < vdel.size(); i++) {
-            _specie = (Species) vdel.elementAt(i);
-            //	  	species.remove(_specie);
-            species.removeElement(_specie);
-
-        }
+        species.removeAll(speciesToDelete);
 
         //Remove the innovations of the current generation
 
@@ -755,7 +745,6 @@ public class Population extends Neat {
 
 
         itr_organism = organisms.iterator();
-        vdel = new Vector(organisms.size());
 
         while (itr_organism.hasNext()) {
             Organism _organism = ((Organism) itr_organism.next());
@@ -781,7 +770,7 @@ public class Population extends Neat {
 
         try {
 
-            Iterator itr_specie;
+            Iterator<Species> itr_specie;
             itr_specie = species.iterator();
 
             while (itr_specie.hasNext()) {
@@ -800,13 +789,13 @@ public class Population extends Neat {
 
     public void speciate() {
 
-        Iterator itr_organism;
-        Iterator itr_specie;
+        Iterator<Organism> itr_organism;
+        Iterator<Species> itr_specie;
 
-        Organism compare_org = null; //Organism for comparison
-        Species newspecies = null;
+        Organism compare_org; //Organism for comparison
+        Species newspecies;
 
-        species = new Vector(1, 0);
+        species = new ArrayList<>();
         int counter = 0; //Species counter
 
         // for each organism.....
@@ -814,7 +803,7 @@ public class Population extends Neat {
         itr_organism = organisms.iterator();
         while (itr_organism.hasNext()) {
 
-            Organism _organism = ((Organism) itr_organism.next());
+            Organism _organism = itr_organism.next();
 
             // if list species is empty , create the first species!
             if (species.isEmpty()) {
@@ -832,7 +821,7 @@ public class Population extends Neat {
                 while (!done && itr_specie.hasNext()) {
 
                     // point _species-esima
-                    Species _specie = ((Species) itr_specie.next());
+                    Species _specie = itr_specie.next();
                     // point to first organism of this _specie-esima
                     compare_org = (Organism) _specie.getOrganisms().firstElement();
                     // compare _organism-esimo('_organism') with first organism in current specie('compare_org')

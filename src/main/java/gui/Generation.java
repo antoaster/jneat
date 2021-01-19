@@ -843,16 +843,15 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
         String riga1 = null;
         boolean esito = false;
         boolean win = false;
-        Genome _genome_win = null;
 
         Document doc2 = textPane2.getDocument();
         String ckx = ck_group.getSelection().getActionCommand();
 
 
         if (generation == 1) {
-            v1_fitness_win = new Vector(1, 0);
-            v1_fitness = new Vector(1, 0);
-            v1_species = new Vector(1, 0);
+            v1_fitness_win = new ArrayList<>();
+            v1_fitness = new ArrayList<>();
+            v1_species = new ArrayList<>();
         }
 
 
@@ -861,7 +860,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
             // Evaluate each organism if exist the winner.........
             // flag and store only the first winner
 
-            Iterator itr_organism;
+            Iterator<Organism> itr_organism;
             itr_organism = pop.organisms.iterator();
             double max_fitness_of_winner = 0.0;
 
@@ -910,7 +909,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
                 if (win)
                     cause2 = " winner";
 
-                String name_of_specie = EnvRoutine.getJneatFileData(filename) + generation;
+                String name_of_specie = EnvRoutine.getJneatTempFile(filename) + generation;
                 pop.print_to_file_by_species(name_of_specie);
                 logger.sendToLog(" generation:      write/rewrite file specie  " + name_of_specie + " -> " + cause1 + cause2);
 
@@ -925,14 +924,14 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
                 while (itr_organism.hasNext()) {
                     Organism _organism = ((Organism) itr_organism.next());
                     if (_organism.winner) {
-                        name_of_winner = EnvRoutine.getJneatFileData(winner_prefix) + generation + "_" + _organism.getGenome().genome_id;
+                        name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + generation + "_" + _organism.getGenome().genome_id;
                         _organism.getGenome().print_to_filename(name_of_winner);
                         // EnvConstant.SERIAL_WINNER++;
                         conta++;
                     }
                     if (EnvConstant.SUPER_WINNER_) {
                         logger.sendToLog(" generation:      in this generation " + generation + " i have found a SUPER WINNER ");
-                        name_of_winner = EnvRoutine.getJneatFileData(winner_prefix) + "_SUPER_" + generation + "_" + _organism.getGenome().genome_id;
+                        name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + "_SUPER_" + generation + "_" + _organism.getGenome().genome_id;
                         _organism.getGenome().print_to_filename(name_of_winner);
                         //  EnvConstant.SERIAL_SUPER_WINNER++;
                         EnvConstant.SUPER_WINNER_ = false;
@@ -1207,7 +1206,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
         _x2 = 0.0;
         _y2 = 0.0;
 
-        itr_fit = new ArrayList(v1_fitness_win).iterator();
+        itr_fit = new ArrayList<>(v1_fitness_win).iterator();
         first_time = true;
         while (itr_fit.hasNext()) {
             if ((first_time)) {
