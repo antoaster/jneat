@@ -1,10 +1,16 @@
-public class xor_out {
+package gui;
 
-    public static int getNumUnit() {
+import jneat.SimulationOutputSpec;
+
+public class XorSimulationOutputSpec implements SimulationOutputSpec {
+
+    @Override
+    public int getNumUnit() {
         return 1;
     }
 
-    public static double getTarget(int _plist[]) {
+    @Override
+    public double getTarget(int _plist[]) {
 
         int _index = _plist[0];
         int _col = _plist[1];

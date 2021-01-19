@@ -269,6 +269,7 @@ public class Parameter extends JPanel implements ActionListener, ListSelectionLi
             jp.setSize(800, 600);
             jp.setVisible(true);
         } catch (Exception ex) {
+            ex.printStackTrace();
             System.err.println("ERRORE");
         }
 

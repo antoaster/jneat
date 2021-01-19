@@ -3,11 +3,7 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
 import java.util.*;
 import java.lang.*;
 
@@ -22,7 +18,7 @@ import java.text.*;
 
 import jGraph.*;
 
-import java.lang.reflect.*;
+import java.util.List;
 
 import log.*;
 
@@ -48,9 +44,9 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
     JPanel p3_curve;
 
 
-    Vector v1_fitness;
-    Vector v1_fitness_win;
-    Vector v1_species;
+    List<Double> v1_fitness;
+    List<Double> v1_fitness_win;
+    List<Double> v1_species;
 
 
     JButton b1;
@@ -77,30 +73,10 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
 
     chartXY mappa_curve;
 
-
-    JSplitPane paneSplit2;
-
-    // dynamic definition for fitness
-    Class Class_fit;
-    Object ObjClass_fit;
-    Method Method_fit;
-    Object ObjRet_fit;
-
-
-    // dynamic definition for input class
-    Class Class_inp;
-    Object ObjClass_inp;
-    Method Method_inp;
-    Object ObjRet_inp;
-
-    // dynamic definition for target class
-    Class Class_tgt;
-    Object ObjClass_tgt;
-    Method Method_tgt;
-    Object ObjRet_tgt;
-
-
-    private volatile Thread lookupThread;
+    // TODO: load this dynamically
+    FitnessFunction fitnessFunction = new XorFitnessFunction();
+    SimulationOutputSpec outputSpec = new XorSimulationOutputSpec();
+    SimulationInputSpec inputSpec = new SomeKindaSimulationInputSpec();
 
 
     final static String[] My_styles =
@@ -311,13 +287,12 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
      */
     public static void main(java.lang.String[] args) {
 
-        JFrame jp = null;
-        Generation pn1 = null;
+        JFrame jp;
 
 
         try {
             jp = new JFrame("  Generation of   n. e. a. t.  ");
-            pn1 = new Generation(jp);
+            new Generation(jp);
 
             //	  jp.getContentPane().add(pn1);
             jp.addWindowListener(
@@ -404,11 +379,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
         try {
 
             logger.sendToLog(" generation:   for this experiment has :");
-            if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_CLASS)
-                logger.sendToLog(" generation:      data coming from class");
-
-            if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_FILE)
-                logger.sendToLog(" generation:      data coming from file");
+            logger.sendToLog(" generation:      data coming from class");
 
             logger.sendToLog(" generation:      data input  is  " + EnvConstant.DATA_INP);
             logger.sendToLog(" generation:      data output is  " + EnvConstant.DATA_OUT);
@@ -446,7 +417,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
                 logger.sendToLog(" generation:      number of activaction A(t) = " + EnvConstant.ACTIVATION_TIMES + " (manual)");
 
 
-            boolean rc1 = startNeat();
+            startNeat();
 
 
         } catch (Throwable e1) {
@@ -454,12 +425,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
             logger.sendToLog(" generation: error during generation.startProcess() :" + e1);
         }
 
-
-        //	}
-
-
     }
-
 
     public void startProcessAsync() {
         Runnable lookupRun =
@@ -474,7 +440,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
 
                     }
                 };
-        lookupThread = new Thread(lookupRun, " looktest");
+        Thread lookupThread = new Thread(lookupRun, " looktest");
         lookupThread.start();
     }
 
@@ -483,14 +449,6 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
 
         EnvConstant.FORCE_RESTART = false;
         EnvConstant.STOP_EPOCH = false;
-        String name = null;
-        String tmp1 = null;
-        String tmp2 = null;
-
-        String ckx = ck_group.getSelection().getActionCommand();
-        //	  " update screen "
-
-        JButton Pulsante = (JButton) e.getSource();
 
         if (e.getActionCommand().equals(" E X I T ")) {
             System.exit(0);
@@ -525,111 +483,36 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
 
 
     public boolean startNeat() {
-        boolean rc = false;
-        String curr_name_pop_specie = null;
+        boolean rc;
+        String curr_name_pop_specie;
 
         String mask5 = "00000";
-        DecimalFormat fmt5 = new DecimalFormat(mask5);
-
 
         Population u_pop = null;
         Genome u_genome = null;
         StringTokenizer st;
         String curword;
         String xline;
-        String fnamebuf;
         IOseq xFile;
         int id;
-        int expcount = 0;
+        int expcount;
         double u_prb_link = 0.5;
         boolean u_recurrent = false;
         int u_max_unit = 0;
         int u_inp_unit = 0;
         int u_out_unit = 0;
-        int gen = 0;
-        String xnome = null;
+        int gen;
 
 
         // imposta classe dinamica per fitness
         //
         try {
 
+            EnvConstant.MAX_FITNESS = fitnessFunction.getMaxFitness();
 
-            Class_fit = Class.forName(EnvConstant.CLASS_FITNESS);
-            ObjClass_fit = Class_fit.newInstance();
-
-            // read max Fitness possible
-            Method_fit = Class_fit.getMethod("getMaxFitness", null);
-            ObjRet_fit = Method_fit.invoke(ObjClass_fit, null);
-            EnvConstant.MAX_FITNESS = Double.parseDouble(ObjRet_fit.toString());
-
-
-            if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_CLASS) {
-
-                // data input
-                //
-                Class_inp = Class.forName(EnvConstant.DATA_INP);
-                ObjClass_inp = Class_inp.newInstance();
-                Method_inp = Class_inp.getMethod("getNumUnit", null);
-                ObjRet_inp = Method_inp.invoke(ObjClass_inp, null);
-                EnvConstant.NR_UNIT_INPUT = Integer.parseInt(ObjRet_inp.toString());
-
-                // number of samples
-                //
-                Method_inp = Class_inp.getMethod("getNumSamples", null);
-                ObjRet_inp = Method_inp.invoke(ObjClass_inp, null);
-                EnvConstant.NUMBER_OF_SAMPLES = Integer.parseInt(ObjRet_inp.toString());
-
-                // data output
-                //
-
-
-                Class_tgt = Class.forName(EnvConstant.DATA_OUT);
-                ObjClass_tgt = Class_tgt.newInstance();
-                Method_tgt = Class_tgt.getMethod("getNumUnit", null);
-                ObjRet_tgt = Method_tgt.invoke(ObjClass_tgt, null);
-                EnvConstant.NR_UNIT_OUTPUT = Integer.parseInt(ObjRet_tgt.toString());
-
-
-            }
-
-
-            if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_FILE) {
-                // legge il primo record e conta il numero di token nella prima riga che trova
-                // in cui non compaia come primi 2 caratteri '//'
-                xnome = EnvRoutine.getJneatFile(EnvConstant.DATA_INP);
-                EnvConstant.NR_UNIT_INPUT = getNumberUnitForFile(xnome);
-
-                // legge quanti record ci sono in cui il primo carattere non sia '//'
-                // e restituisce il numero di tali record in input
-                xnome = EnvRoutine.getJneatFile(EnvConstant.DATA_INP);
-
-                EnvConstant.NUMBER_OF_SAMPLES = EnvRoutine.getNumberSamplesForFile(xnome);
-                //			   EnvConstant.NUMBER_OF_SAMPLES  = getNumberSamplesForFile(xnome);
-
-
-                // legge il primo record e conta il numero di token nella prima riga che trova
-                // in cui non compaia come primi 2 caratteri '//'
-                xnome = EnvRoutine.getJneatFile(EnvConstant.DATA_OUT);
-                EnvConstant.NR_UNIT_OUTPUT = getNumberUnitForFile(xnome);
-
-                // legge quanti record ci sono in cui il primo carattere non sia '//'
-                // e restituisce il numero di tali record in output
-                xnome = EnvRoutine.getJneatFile(EnvConstant.DATA_OUT);
-
-
-                //			   int nout = getNumberSamplesForFile(xnome);
-                int nout = EnvRoutine.getNumberSamplesForFile(xnome);
-
-
-                if (EnvConstant.NUMBER_OF_SAMPLES != nout) {
-                    System.out.print("\n Number of input samples (=" + EnvConstant.NUMBER_OF_SAMPLES);
-                    System.out.print(") is different to number of target samples(=" + nout + ")");
-                    System.out.print("\n correct files and rerun;  \n\t bye");
-                    System.exit(8);
-                }
-            }
-
+            EnvConstant.NR_UNIT_INPUT = inputSpec.getNumUnit();
+            EnvConstant.NUMBER_OF_SAMPLES = inputSpec.getNumSamples();
+            EnvConstant.NR_UNIT_OUTPUT = outputSpec.getNumUnit();
 
             logger.sendToLog(" generation:  real    okay setting size inp ->" + EnvConstant.NR_UNIT_INPUT);
             logger.sendToLog(" generation:  real    okay setting size out ->" + EnvConstant.NR_UNIT_OUTPUT);
@@ -829,172 +712,59 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
         Integer nn = new Integer(xnn);
 
 
-        Class[] params = {int.class, int.class, double[][].class, double[][].class};
-        Object paramsObj[] = new Object[]{ns, nn, out, tgt};
+        try {
+            int[] plist_in = new int[2];
+
+            for (count = 0; count < EnvConstant.NUMBER_OF_SAMPLES; count++) {
+                plist_in[0] = count;
+                // first activation from sensor to first next level of neurons
+                for (int j = 0; j < EnvConstant.NR_UNIT_INPUT; j++) {
+                    plist_in[1] = j;
+                    double v1 = inputSpec.getInput(plist_in);
+                    in[j] = v1;
+                }
 
 
-        if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_CLASS) {
+                // load sensor
+                _net.load_sensors(in);
+           /*
+           // activate net
+           success = _net.activate();
 
+           // next activation while last level is reached !
+           // use depth to ensure relaxation
 
-            // case of input from class java
+           for (int relax = 0; relax <= net_depth; relax++)
+            success = _net.activate();
+           */
 
-            try {
-                int plist_in[] = new int[2];
-                Class[] params_inp = {int[].class};
-                Object[] paramsObj_inp = new Object[]{plist_in};
-
-                for (count = 0; count < EnvConstant.NUMBER_OF_SAMPLES; count++) {
-                    plist_in[0] = count;
-                    // first activation from sensor to first next level of neurons
-                    for (int j = 0; j < EnvConstant.NR_UNIT_INPUT; j++) {
-                        plist_in[1] = j;
-                        Method_inp = Class_inp.getMethod("getInput", params_inp);
-                        ObjRet_inp = Method_inp.invoke(ObjClass_inp, paramsObj_inp);
-                        double v1 = Double.parseDouble(ObjRet_inp.toString());
-                        in[j] = v1;
-                    }
-
-
-                    // load sensor
-                    _net.load_sensors(in);
-			   /*
-			   // activate net	  
-			   success = _net.activate();
-			   
-			   // next activation while last level is reached !
-			   // use depth to ensure relaxation
-			   
-			   for (int relax = 0; relax <= net_depth; relax++)
-				success = _net.activate();
-			   */
-
-                    if (EnvConstant.ACTIVATION_PERIOD == EnvConstant.MANUAL) {
-                        for (int relax = 0; relax < EnvConstant.ACTIVATION_TIMES; relax++) {
-                            success = _net.activate();
-                        }
-                    } else {
-                        // first activation from sensor to next layer....
+                if (EnvConstant.ACTIVATION_PERIOD == EnvConstant.MANUAL) {
+                    for (int relax = 0; relax < EnvConstant.ACTIVATION_TIMES; relax++) {
                         success = _net.activate();
-
-                        // next activation while last level is reached !
-                        // use depth to ensure relaxation
-                        for (int relax = 0; relax <= net_depth; relax++) {
-                            success = _net.activate();
-                        }
                     }
+                } else {
+                    // first activation from sensor to next layer....
+                    success = _net.activate();
 
-
-                    // for each sample save each output
-                    for (int j = 0; j < EnvConstant.NR_UNIT_OUTPUT; j++)
-                        out[count][j] = ((NNode) _net.getOutputs().elementAt(j)).getActivation();
-
-                    // clear net
-                    _net.flush();
-                }
-            } catch (Exception e2) {
-                System.out.print("\n Error generic in Generation.input signal : err-code = \n" + e2);
-                System.out.print("\n re-run this application when the class is ready\n\t\t thank! ");
-                System.exit(8);
-
-            }
-
-        } else if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_FILE) {
-
-            //					System.out.print("\n evaluate.step 3a ");
-
-
-            String nomef;
-            nomef = EnvRoutine.getJneatFile(EnvConstant.DATA_INP);
-
-            StringTokenizer riga;
-            String xline;
-            String elem = null;
-            IOseq xFile;
-            xFile = new IOseq(nomef);
-            boolean ret = xFile.IOseqOpenR();
-
-            if (ret) {
-                xline = xFile.IOseqRead();
-                count = 0;
-                while ((xline != "EOF")) {
-                    if (!(xline.startsWith("//", 0))) {
-                        riga = new StringTokenizer(xline);
-                        int sz = riga.countTokens();
-                        if (sz != EnvConstant.NR_UNIT_INPUT) {
-                            System.out.print("\n *ALERT* in rec " + count);
-                            System.out.print(" number of input = " + sz);
-                            System.out.print(" different from declared " + EnvConstant.NR_UNIT_INPUT + " unit");
-                            System.out.print("\n correct and re-run;\n\t  Bye");
-                            System.exit(9);
-                        }
-
-                        for (int j = 0; j < EnvConstant.NR_UNIT_INPUT; j++) {
-                            elem = riga.nextToken();
-                            double v1 = Double.parseDouble(elem);
-                            in[j] = v1;
-
-                            //						System.out.print("\n time("+count+") inp("+j+") = "+v1);
-
-
-                        }
-
-
-                        // get sensor
-                        _net.load_sensors(in);
-				  
-				  /*				  // first activation	 
-				  success = _net.activate();
-				  
-				  // next activation while last level is reached !
-				  // use depth to ensure relaxation
-				  for (int relax = 0; relax <= net_depth; relax++)
-				  success = _net.activate();
-				  */
-
-
-                        //					System.out.print("\n evaluate.step 3b ");
-
-
-                        if (EnvConstant.ACTIVATION_PERIOD == EnvConstant.MANUAL) {
-                            for (int relax = 0; relax < EnvConstant.ACTIVATION_TIMES; relax++) {
-                                success = _net.activate();
-                            }
-                        } else {
-                            // first activation from sensor to next layer....
-                            success = _net.activate();
-
-                            // next activation while last level is reached !
-                            // use depth to ensure relaxation
-                            for (int relax = 0; relax <= net_depth; relax++) {
-                                success = _net.activate();
-                            }
-                        }
-
-
-                        //			      					System.out.print("\n evaluate.step 3c ");
-
-
-                        // for each sample save each output
-                        for (int j = 0; j < EnvConstant.NR_UNIT_OUTPUT; j++) {
-                            //						System.out.print("\n time("+count+") out("+j+") ");
-                            //						System.out.print(" = "+out[count][j]);
-
-                            out[count][j] = ((NNode) _net.getOutputs().elementAt(j)).getActivation();
-                        }
-
-                        // reset net
-                        _net.flush();
-
-                        count++;
+                    // next activation while last level is reached !
+                    // use depth to ensure relaxation
+                    for (int relax = 0; relax <= net_depth; relax++) {
+                        success = _net.activate();
                     }
-                    xline = xFile.IOseqRead();
-
                 }
+
+
+                // for each sample save each output
+                for (int j = 0; j < EnvConstant.NR_UNIT_OUTPUT; j++)
+                    out[count][j] = ((NNode) _net.getOutputs().elementAt(j)).getActivation();
+
+                // clear net
+                _net.flush();
             }
-
-
-            //								System.out.print("\n evaluate.step 3z ");
-
+        } catch (Exception e2) {
+            System.out.print("\n Error generic in Generation.input signal : err-code = \n" + e2);
+            System.out.print("\n re-run this application when the class is ready\n\t\t thank! ");
+            System.exit(8);
 
         }
 
@@ -1003,76 +773,28 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
         if (success) {
             try {
 
-                if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_CLASS) {
 
+                // prima di passare a calcolare il fitness legge il tgt da ripassare
+                // al chiamante;
+                int[] plist_tgt = new int[2];
 
-                    // prima di passare a calcolare il fitness legge il tgt da ripassare
-                    // al chiamante;
-                    int plist_tgt[] = new int[2];
-                    Class[] params_tgt = {int[].class};
-                    Object[] paramsObj_tgt = new Object[]{plist_tgt};
+                for (count = 0; count < EnvConstant.NUMBER_OF_SAMPLES; count++) {
+                    //					 System.out.print("\n sample : "+count);
 
-                    for (count = 0; count < EnvConstant.NUMBER_OF_SAMPLES; count++) {
-                        //					 System.out.print("\n sample : "+count);
-
-                        plist_tgt[0] = count;
-                        for (int j = 0; j < EnvConstant.NR_UNIT_OUTPUT; j++) {
-                            plist_tgt[1] = j;
-                            Method_tgt = Class_tgt.getMethod("getTarget", params_tgt);
-                            ObjRet_tgt = Method_tgt.invoke(ObjClass_tgt, paramsObj_tgt);
-                            double v1 = Double.parseDouble(ObjRet_tgt.toString());
-                            //						System.out.print(" ,  o["+j+"] = "+v1);
-                            tgt[count][j] = v1;
-                        }
+                    plist_tgt[0] = count;
+                    for (int j = 0; j < EnvConstant.NR_UNIT_OUTPUT; j++) {
+                        plist_tgt[1] = j;
+                        double v1 = outputSpec.getTarget(plist_tgt);
+                        //						System.out.print(" ,  o["+j+"] = "+v1);
+                        tgt[count][j] = v1;
                     }
-
-                } else if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_FILE) {
-
-                    String nomef;
-                    nomef = EnvRoutine.getJneatFile(EnvConstant.DATA_OUT);
-                    StringTokenizer riga;
-                    String xline;
-                    String elem = null;
-                    IOseq xFile;
-                    xFile = new IOseq(nomef);
-                    boolean ret = xFile.IOseqOpenR();
-
-                    if (ret) {
-                        xline = xFile.IOseqRead();
-                        count = 0;
-                        while ((xline != "EOF")) {
-                            if (!(xline.startsWith("//", 0))) {
-                                riga = new StringTokenizer(xline);
-                                int sz = riga.countTokens();
-                                if (sz != EnvConstant.NR_UNIT_OUTPUT) {
-                                    System.out.print("\n *ALERT* in rec " + count);
-                                    System.out.print(" number of output = " + sz);
-                                    System.out.print(" different from declared " + EnvConstant.NR_UNIT_OUTPUT + " unit");
-                                    System.out.print("\n correct and re-run;\n\t  Bye");
-                                    System.exit(9);
-                                }
-
-                                for (int j = 0; j < EnvConstant.NR_UNIT_OUTPUT; j++) {
-                                    elem = riga.nextToken();
-                                    double v1 = Double.parseDouble(elem);
-                                    tgt[count][j] = v1;
-                                    //					  System.out.print("\n per epoch "+count+" tgt("+j+"Â£) = "+v1);
-                                }
-                                count++;
-                            }
-                            xline = xFile.IOseqRead();
-                        }
-                    }
-
                 }
 
+                double[] fitness = fitnessFunction.computeFitness(ns, nn, out, tgt);
 
-                Method_fit = Class_fit.getMethod("computeFitness", params);
-                ObjRet_fit = Method_fit.invoke(ObjClass_fit, paramsObj);
-
-                fit_dyn = Array.getDouble(ObjRet_fit, 0);
-                err_dyn = Array.getDouble(ObjRet_fit, 1);
-                win_dyn = Array.getDouble(ObjRet_fit, 2);
+                fit_dyn = fitness[0];
+                err_dyn = fitness[1];
+                win_dyn = fitness[2];
 
 
                 //			   System.out.print("\n ce so passo!");

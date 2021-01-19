@@ -1,16 +1,21 @@
 package gui;
 
-public class bin_inp {
+import jneat.SimulationInputSpec;
 
-    public static int getNumSamples() {
+public class SomeKindaSimulationInputSpec implements SimulationInputSpec {
+
+    @Override
+    public int getNumSamples() {
         return 4;
     }
 
-    public static int getNumUnit() {
+    @Override
+    public int getNumUnit() {
         return 2;
     }
 
-    public static double getInput(int _plist[]) {
+    @Override
+    public double getInput(int _plist[]) {
 
         int _index = _plist[0];
         int _col = _plist[1];
@@ -38,5 +43,4 @@ public class bin_inp {
         return d[_index][_col];
 
     }
-
 } 

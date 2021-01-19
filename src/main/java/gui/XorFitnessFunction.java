@@ -1,10 +1,14 @@
-public class xor_fit {
+package gui;
 
-    public static double getMaxFitness() {
+import jneat.FitnessFunction;
+
+public class XorFitnessFunction implements FitnessFunction {
+
+    public double getMaxFitness() {
         return Math.pow(4.0, 2);
     }
 
-    public static double[] computeFitness(int _sample, int _num_nodes, double _out[][], double _tgt[][]) {
+    public double[] computeFitness(int _sample, int _num_nodes, double _out[][], double _tgt[][]) {
         double d[] = new double[3];
         double errorsum = 0.0;
         double fitness;

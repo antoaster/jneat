@@ -323,6 +323,7 @@ public class Grafi extends JPanel implements ActionListener, ListSelectionListen
             jp.setSize(800, 600);
             jp.setVisible(true);
         } catch (Exception ex) {
+            ex.printStackTrace();
             System.err.println("ERRORE");
         }
 
@@ -563,10 +564,10 @@ public class Grafi extends JPanel implements ActionListener, ListSelectionListen
         }
 
 
-        if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_FILE) {
+        if (false) {
             logger.sendToLog(" grafi: execution from file...");
             expm.executeForFile(textArea);
-        } else if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_CLASS) {
+        } else if (true) {
             logger.sendToLog(" grafi: execution from class...");
             expm.executeForClass(textArea);
         }
@@ -589,11 +590,11 @@ public class Grafi extends JPanel implements ActionListener, ListSelectionListen
         Execution expm = new Execution();
         expm.createNetwork(_genome);
 
-        if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_FILE) {
+        if (false) {
             logger.sendToLog(" grafi: execution from file...");
             expm.executeForFile(textArea);
 
-        } else if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_CLASS) {
+        } else if (true) {
             logger.sendToLog(" grafi: execution from class...");
             expm.executeForClass(textArea);
         }

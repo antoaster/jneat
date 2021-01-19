@@ -51,15 +51,11 @@ public class Session extends JPanel implements ActionListener {
     JButton b2;
     JButton b3;
     JButton b4;
-    JButton b5;
-    JButton b6;
-    JButton b7;
     JButton b8;
     JButton b9;
     JButton b10;
     JButton b11;
     JButton b12;
-    JButton b13;
 //	  JButton b14;
 
     JButton b99;
@@ -299,15 +295,6 @@ public class Session extends JPanel implements ActionListener {
         b4 = new JButton(" Write sess file...");
         b4.addActionListener(this);
 
-        b5 = new JButton(" Load class fitness");
-        b5.addActionListener(this);
-
-        b6 = new JButton(" Load class data input");
-        b6.addActionListener(this);
-
-        b7 = new JButton(" Load class data target");
-        b7.addActionListener(this);
-
         b8 = new JButton(" Set session file  skeleton ");
         b8.addActionListener(this);
 
@@ -323,9 +310,6 @@ public class Session extends JPanel implements ActionListener {
         b12 = new JButton(" C H E C K  keyword ");
         b12.addActionListener(this);
 
-        b13 = new JButton(" C O M P I L E ");
-        b13.addActionListener(this);
-	  
 /*		 b14 = new JButton(" clear log-window");
 		 b14.addActionListener(this);
 	 */
@@ -337,15 +321,11 @@ public class Session extends JPanel implements ActionListener {
         b2.setFont(fc);
         b3.setFont(fc);
         b4.setFont(fc);
-        b5.setFont(fc);
-        b6.setFont(fc);
-        b7.setFont(fc);
         b8.setFont(fc);
         b9.setFont(fc);
         b10.setFont(fc);
         b11.setFont(fc);
         b12.setFont(fc);
-        b13.setFont(fc);
 //		 b14.setFont(fc);
         b99.setFont(fc);
 
@@ -392,24 +372,6 @@ public class Session extends JPanel implements ActionListener {
         gbl.setConstraints(b4, limiti);
         p2.add(b4);
 
-        buildConstraints(limiti, 0, 9, 1, 2, 0, 5);
-        limiti.anchor = GridBagConstraints.NORTH;
-        limiti.fill = GridBagConstraints.BOTH;
-        gbl.setConstraints(b5, limiti);
-        p2.add(b5);
-
-        buildConstraints(limiti, 0, 11, 1, 2, 0, 5);
-        limiti.anchor = GridBagConstraints.NORTH;
-        limiti.fill = GridBagConstraints.BOTH;
-        gbl.setConstraints(b6, limiti);
-        p2.add(b6);
-
-        buildConstraints(limiti, 0, 13, 1, 2, 0, 5);
-        limiti.anchor = GridBagConstraints.NORTH;
-        limiti.fill = GridBagConstraints.BOTH;
-        gbl.setConstraints(b7, limiti);
-        p2.add(b7);
-
         buildConstraints(limiti, 0, 15, 1, 2, 0, 5);
         limiti.anchor = GridBagConstraints.NORTH;
         limiti.fill = GridBagConstraints.BOTH;
@@ -440,18 +402,6 @@ public class Session extends JPanel implements ActionListener {
         gbl.setConstraints(b12, limiti);
         p2.add(b12);
 
-        buildConstraints(limiti, 0, 25, 1, 2, 0, 5);
-        limiti.anchor = GridBagConstraints.NORTH;
-        limiti.fill = GridBagConstraints.BOTH;
-        gbl.setConstraints(b13, limiti);
-        p2.add(b13);
-/*	  
-		 buildConstraints(limiti, 0, 27, 1, 2, 0, 5);
-		 limiti.anchor = GridBagConstraints.NORTH;
-		 limiti.fill = GridBagConstraints.BOTH;
-		 gbl.setConstraints(b14, limiti);
-		 p2.add(b14);
-*/
         buildConstraints(limiti, 0, 27, 1, 2, 0, 35);
         limiti.anchor = GridBagConstraints.SOUTH;
         limiti.fill = GridBagConstraints.HORIZONTAL;
@@ -546,6 +496,7 @@ public class Session extends JPanel implements ActionListener {
             jp.setSize(800, 600);
             jp.setVisible(true);
         } catch (Exception ex) {
+            ex.printStackTrace();
             System.err.println("ERRORE");
         }
 
@@ -811,75 +762,7 @@ public class Session extends JPanel implements ActionListener {
             setSourceNew(initDataClassOutput);
             logger.sendToLog(" session: set to default skeleton for  class/dataset generate output");
             logger.sendToStatus("READY");
-        } else if (e.getActionCommand().equals(" Load class data target")) {
-            logger.sendToStatus("wait...");
-            EnvConstant.EDIT_STATUS = EnvConstant.EDIT_CLASS_OUT;
-            if (curr_output_data != null) {
-                load_from_disk_Class(curr_output_data, "data");
-            } else
-                logger.sendToLog(" session: *warning* before load data-out , load the sesssion !");
-
-
-            logger.sendToStatus("READY");
-        } else if (e.getActionCommand().equals(" Load class fitness")) {
-            logger.sendToStatus("wait...");
-            EnvConstant.EDIT_STATUS = EnvConstant.EDIT_CLASS_FIT;
-            if (curr_fitness_class != null) {
-                load_from_disk_Class(curr_fitness_class, "fitness");
-            } else
-                logger.sendToLog(" session: *warning* before load fitness , load the sesssion !");
-
-            logger.sendToStatus("READY");
-        } else if (e.getActionCommand().equals(" Load class data input")) {
-            logger.sendToStatus("wait...");
-            EnvConstant.EDIT_STATUS = EnvConstant.EDIT_CLASS_INP;
-            if (curr_input_data != null) {
-                load_from_disk_Class(curr_input_data, "data");
-            } else
-                logger.sendToLog(" session: *warning* before load data-in , load the sesssion !");
-
-            logger.sendToStatus("READY");
-        } else if (e.getActionCommand().equals(" C O M P I L E ")) {
-            if (EnvConstant.EDIT_STATUS == EnvConstant.EDIT_CLASS_FIT) {
-                if (curr_fitness_class != null) {
-                    EnvConstant.CURRENT_CLASS = curr_fitness_class;
-                    Async_generationClass();
-                }
-            } else if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_CLASS) {
-
-                if (EnvConstant.EDIT_STATUS == EnvConstant.EDIT_CLASS_INP) {
-                    if (curr_input_data != null) {
-                        EnvConstant.CURRENT_CLASS = curr_input_data;
-                        Async_generationClass();
-                    }
-                } else if (EnvConstant.EDIT_STATUS == EnvConstant.EDIT_CLASS_OUT) {
-                    if (curr_output_data != null) {
-                        EnvConstant.CURRENT_CLASS = curr_output_data;
-                        Async_generationClass();
-                    }
-                }
-
-            } else if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_FILE) {
-
-                if (EnvConstant.EDIT_STATUS == EnvConstant.EDIT_CLASS_INP) {
-                    if (curr_input_data != null) {
-                        EnvConstant.CURRENT_FILE = curr_input_data;
-                        Async_generationFile();
-                    }
-                } else if (EnvConstant.EDIT_STATUS == EnvConstant.EDIT_CLASS_OUT) {
-                    if (curr_output_data != null) {
-
-                        EnvConstant.CURRENT_FILE = curr_output_data;
-                        Async_generationFile();
-
-                    }
-                }
-
-            }
-
-
         }
-
 
     }
 
@@ -902,133 +785,6 @@ public class Session extends JPanel implements ActionListener {
 
     public void setLog(HistoryLog _log) {
         logger = _log;
-    }
-
-
-    public void createClass(String _filename, String[] sourcecode) {
-        try {
-            FileWriter aWriter = new FileWriter(_filename, false);
-
-            for (int r = 0; r < sourcecode.length; r++)
-                aWriter.write(sourcecode[r]);
-
-            aWriter.flush();
-            aWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public boolean compileClass(String _filename) {
-
-        String[] source = {new String(_filename)};
-        PrintStream ps = System.err;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        System.setErr(new PrintStream(baos));
-
-/*
-		 
-	  // jdk 1.1.8
-	  //
-	  
-		 new sun.tools.javac.Main(baos, source[0]).compile(source);
-		 System.setErr(ps);
-		 if (baos.toString().indexOf("error") == -1)
-			return true;
-		 else {
-		 
-			try {
-			
-			   logger.sendToLog(" session: *warning* error during compilation : ");
-			   logger.sendToLog(" session: "+baos.toString());
-			
-			} 
-				catch (Throwable e1) {
-				  System.err.println(e1 + " session: error in try-compile  "+e1);
-			   }
-			return false;
-		 }
-
-		*/
-
-
-        // jdk 1.3.1_01
-        //
-	  
-/*
-	  com.sun.tools.javac.Main m1 = new com.sun.tools.javac.Main();
-	  m1.compile(source);
-	  System.setErr(ps);
-
-*/
-        if (true) throw new RuntimeException("I was hoping it wouldn't get here...");
-
-        Date xdata = new Date();
-        if (baos.toString().indexOf("error") == -1)
-            return true;
-        else {
-
-
-            try {
-                logger.sendToLog(" session: *warning* error during compilation : ");
-                logger.sendToLog(" session: " + baos.toString());
-
-            } catch (Throwable e1) {
-                System.err.println(e1 + " session: error in try-compile  " + e1);
-            }
-            return false;
-        }
-
-
-    }
-
-
-    public void Async_generationClass() {
-        Runnable lookupRun =
-                new Runnable() {
-                    public void run() {
-                        generationClass();
-                    }
-                };
-        lookupThread = new Thread(lookupRun, " looktest");
-        lookupThread.start();
-    }
-
-    public void generationClass() {
-
-        String _classname = EnvConstant.CURRENT_CLASS;
-        String nomef = null;
-
-        logger.sendToStatus("wait....");
-        try {
-
-            logger.sendToLog(" session: start compile ->" + _classname + " in dir ->" + EnvConstant.JNEAT_DIR);
-            // legge corrente nome source della classe da creare
-            //
-            nomef = EnvRoutine.getJneatFile(_classname + ".java");
-            // converte da stringa unica a vettore di stringhe
-            String[] source_new = convertToArray(textPane1.getText());
-            logger.sendToLog(" session: creation source " + _classname + ".java");
-            // genera il source.java
-            //
-            createClass(nomef, source_new);
-            logger.sendToLog(" session: terminate creation source");
-            logger.sendToLog(" session: creation class " + _classname + ".class");
-            // genera il file .class
-            //
-            compileClass(nomef);
-            logger.sendToLog(" session: terminate creation class " + _classname + ".class");
-            // riaggiorna il pannello con quello che ha appena scritto
-            textPane1.setText("");
-            setSourceNew(source_new);
-            logger.sendToStatus("READY");
-
-        } catch (Throwable e1) {
-            logger.sendToLog(" session: error during compile fitness " + e1);
-        }
-        logger.sendToStatus("READY");
-
     }
 
     public void setSourceNew(String[] _source) {
@@ -1195,18 +951,6 @@ public class Session extends JPanel implements ActionListener {
 
     }
 
-
-    public void Async_generationFile() {
-        Runnable lookupRun =
-                new Runnable() {
-                    public void run() {
-                        generationFile();
-                    }
-                };
-        lookupThread = new Thread(lookupRun, " looktest");
-        lookupThread.start();
-    }
-
     public void generationFile() {
         String _fname = EnvConstant.CURRENT_FILE;
 
@@ -1244,72 +988,6 @@ public class Session extends JPanel implements ActionListener {
 
 
     }
-
-    public void load_from_disk_Class(String _filename, String _type) {
-        String nomef = null;
-
-        if (_type.equalsIgnoreCase("fitness"))
-            nomef = EnvRoutine.getJneatFile(_filename + ".java");
-
-        else {
-            if (EnvConstant.TYPE_OF_SIMULATION == EnvConstant.SIMULATION_FROM_CLASS)
-                nomef = EnvRoutine.getJneatFile(_filename + ".java");
-            else
-                nomef = EnvRoutine.getJneatFile(_filename);
-        }
-
-
-        StringTokenizer st;
-        String xline;
-        IOseq xFile;
-
-        xFile = new IOseq(nomef);
-        boolean exist = xFile.IOseqOpenR();
-
-        if (exist) {
-
-            StringBuffer sb1 = new StringBuffer("");
-            try {
-
-                logger.sendToStatus(" session: wait....");
-                logger.sendToLog("  session: wait loading " + nomef + "...");
-                xline = xFile.IOseqRead();
-
-                while (xline != "EOF") {
-                    sb1.append(xline + "\n");
-                    xline = xFile.IOseqRead();
-                }
-
-                textPane1.setText("");
-                String[] source_new = convertToArray(sb1.toString());
-                setSourceNew(source_new);
-
-                logger.sendToLog(" session: wait loaded " + nomef);
-                logger.sendToStatus("READY");
-
-            } catch (Throwable e1) {
-                logger.sendToLog(" session: error during read " + nomef + " " + e1);
-            }
-
-            xFile.IOseqCloseR();
-            logger.sendToStatus("READY");
-
-        } // exist cycle
-
-        else {
-
-            try {
-                logger.sendToLog("  session: warning : file  " + nomef + " not exist!");
-            } catch (Throwable e2) {
-                System.err.println(e2 + " session: error during text processing " + e2);
-            }
-
-            logger.sendToStatus("READY");
-
-        }
-
-    }
-
 
     public void setStyleNew() {
 

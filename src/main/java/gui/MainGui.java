@@ -41,7 +41,6 @@ public class MainGui extends JPanel {
 
     JTabbedPane jtabbedPane1;
 
-
     public static void main(String[] args) {
         JFrame jp = null;
         MainGui pn1 = null;
@@ -65,6 +64,7 @@ public class MainGui extends JPanel {
             jp.setVisible(true);
 
         } catch (Exception ex) {
+            ex.printStackTrace();
             System.err.println("ERRORE");
         }
 

@@ -59,7 +59,8 @@ public class graph extends javax.swing.JPanel implements ActionListener {
 	  	jGrafo.setSize(500, 500);
 	  	jGrafo.setVisible(true);
 	  } catch (Exception ex) {
-	  	System.err.println("ERRORE");
+	  	ex.printStackTrace();
+            System.err.println("ERRORE");
 	  }
 	  
 	  */
@@ -84,6 +85,7 @@ public class graph extends javax.swing.JPanel implements ActionListener {
             jp.setSize(600, 600);
             jp.setVisible(true);
         } catch (Exception ex) {
+            ex.printStackTrace();
             System.err.println("ERRORE");
         }
 

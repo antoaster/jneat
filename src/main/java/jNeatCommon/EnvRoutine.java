@@ -290,6 +290,7 @@ public class EnvRoutine {
 
 
             } catch (Throwable e1) {
+                e1.printStackTrace();
                 System.out.print(" routine: error during open " + nomef + " : " + e1);
             }
 
