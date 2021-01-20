@@ -5,8 +5,6 @@ import jNeatCommon.EnvRoutine;
 import jNeatCommon.IOseq;
 import log.HistoryLog;
 
-import javax.swing.*;
-import javax.swing.text.Document;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -40,12 +38,8 @@ public class NeatRunner {
         boolean rc;
         String curr_name_pop_specie;
 
-        String mask5 = "00000";
-
         Population u_pop = null;
         Genome u_genome = null;
-        StringTokenizer st;
-        String curword;
         String xline;
         IOseq xFile;
         int id;
@@ -61,8 +55,6 @@ public class NeatRunner {
         // imposta classe dinamica per fitness
         //
         try {
-
-            EnvConstant.MAX_FITNESS = fitnessFunction.getMaxFitness();
 
             EnvConstant.NR_UNIT_INPUT = inputSpec.getNumUnit();
             EnvConstant.NUMBER_OF_SAMPLES = inputSpec.getNumSamples();
@@ -84,9 +76,8 @@ public class NeatRunner {
 
             logger.sendToLog(" generation:      read parameter file of neat ...");
 
-            Neat u_neat = new Neat();
-            u_neat.initbase();
-            rc = u_neat.readParam(EnvRoutine.getJneatParameter());
+            Neat.initbase();
+            rc = Neat.readParam(EnvRoutine.getJneatParameter());
 
             if (!rc) {
                 logger.sendToLog(" generation: error in read " + EnvRoutine.getJneatParameter());
@@ -109,9 +100,9 @@ public class NeatRunner {
 
                 logger.sendToLog(" generation:      open file genome " + EnvRoutine.getJneatFileData(EnvConstant.NAME_GENOMEA) + "...");
                 xline = xFile.IOseqRead();
-                st = new StringTokenizer(xline);
-                //skip
-                curword = st.nextToken();
+                StringTokenizer st = new StringTokenizer(xline);
+                //skip something?
+                String curword = st.nextToken();
                 //id of genome can be readed
                 curword = st.nextToken();
                 id = Integer.parseInt(curword);
@@ -153,16 +144,16 @@ public class NeatRunner {
             EnvConstant.RUNNING = true;
 
 
-            for (expcount = 0; expcount < u_neat.p_num_runs; expcount++) {
+            for (expcount = 0; expcount < Neat.p_num_runs; expcount++) {
 
                 logger.sendToLog(" generation:      Spawned population ...");
 
 
                 if ((EnvConstant.TYPE_OF_START == EnvConstant.START_FROM_GENOME) && (!EnvConstant.FORCE_RESTART))
-                    u_pop = new Population(u_genome, u_neat.p_pop_size);
+                    u_pop = new Population(u_genome, Neat.p_pop_size);
 
                 if ((EnvConstant.TYPE_OF_START == EnvConstant.START_FROM_NEW_RANDOM_POPULATION) && (!EnvConstant.FORCE_RESTART))
-                    u_pop = new Population(u_neat.p_pop_size, (u_inp_unit + 1), u_out_unit, u_max_unit, u_recurrent, u_prb_link);
+                    u_pop = new Population(Neat.p_pop_size, (u_inp_unit + 1), u_out_unit, u_max_unit, u_recurrent, u_prb_link);
 
                 if ((EnvConstant.TYPE_OF_START == EnvConstant.START_FROM_OLD_POPULATION) || (EnvConstant.FORCE_RESTART))
                     u_pop = new Population(EnvRoutine.getJneatFileData(EnvConstant.NAME_CURR_POPULATION));
@@ -178,7 +169,7 @@ public class NeatRunner {
                     curr_name_pop_specie = EnvConstant.PREFIX_SPECIES_FILE;
                     //
                     EnvConstant.SUPER_WINNER_ = false;
-                    boolean esito = epoch(u_neat, u_pop, gen, curr_name_pop_specie);
+                    boolean success = epoch(u_pop, gen, curr_name_pop_specie);
                     logger.sendToStatus(" running generation ->" + gen);
 
                     if (EnvConstant.STOP_EPOCH)
@@ -193,8 +184,8 @@ public class NeatRunner {
 
 
             // before exit save last population
-            u_pop.print_to_file_by_species(EnvRoutine.getJneatFileData(EnvConstant.NAME_CURR_POPULATION));
-            logger.sendToLog(" generation:      saved curr pop file " + EnvRoutine.getJneatFileData(EnvConstant.NAME_CURR_POPULATION));
+            u_pop.print_to_file_by_species(EnvRoutine.getJneatTempFile(EnvConstant.NAME_CURR_POPULATION));
+            logger.sendToLog(" generation:      saved curr pop file " + EnvRoutine.getJneatTempFile(EnvConstant.NAME_CURR_POPULATION));
             logger.sendToLog(" generation:  READY for other request");
 
         } catch (Throwable e1) {
@@ -212,14 +203,12 @@ public class NeatRunner {
     }
 
     public boolean epoch(
-            Neat _neat,
             Population pop,
             int generation,
             String filename) {
 
         String winner_prefix = EnvConstant.PREFIX_WINNER_FILE;
-        String riga1 = null;
-        boolean esito = false;
+        boolean esito;
         int winners = 0;
 
         if (generation == 1) {
@@ -240,7 +229,7 @@ public class NeatRunner {
 
             while (itr_organism.hasNext()) {
                 //point to organism
-                Organism _organism = ((Organism) itr_organism.next());
+                Organism _organism = itr_organism.next();
 
                 //evaluate
                 esito = evaluate(_organism);
@@ -265,10 +254,10 @@ public class NeatRunner {
             }
 
             //compute average and max fitness for each species
-            Iterator itr_specie;
+            Iterator<Species> itr_specie;
             itr_specie = pop.species.iterator();
             while (itr_specie.hasNext()) {
-                Species _specie = ((Species) itr_specie.next());
+                Species _specie = itr_specie.next();
                 _specie.compute_average_fitness();
                 _specie.compute_max_fitness();
             }
@@ -276,9 +265,9 @@ public class NeatRunner {
 
             String cause1 = " ";
             String cause2 = " ";
-            if (((generation % _neat.p_print_every) == 0) || (winners > 0)) {
+            if (((generation % Neat.p_print_every) == 0) || (winners > 0)) {
 
-                if ((generation % _neat.p_print_every) == 0)
+                if ((generation % Neat.p_print_every) == 0)
                     cause1 = " request";
                 if (winners > 0)
                     cause2 = " winner";
@@ -296,7 +285,7 @@ public class NeatRunner {
                 int conta = 0;
                 itr_organism = pop.getOrganisms().iterator();
                 while (itr_organism.hasNext()) {
-                    Organism _organism = ((Organism) itr_organism.next());
+                    Organism _organism = itr_organism.next();
                     if (_organism.winner) {
                         name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + generation + "_" + _organism.getGenome().genome_id;
                         _organism.getGenome().print_to_filename(name_of_winner);
@@ -327,15 +316,6 @@ public class NeatRunner {
 
                 if (winners > 0)
                     logger.sendToLog(" generation:    This specie contains the  << WINNER >> ");
-
-                if (!(EnvConstant.FIRST_ORGANISM_WINNER == null)) {
-                    int idx = ((Organism) EnvConstant.FIRST_ORGANISM_WINNER).genome.genome_id;
-
-                    if (winners > 0)
-                        riga1 = "Time : " + generation + " genome (id=" + idx + ") is Current CHAMPION - WINNER ";
-                    else
-                        riga1 = "Time : " + generation + " genome (id=" + idx + ") is Current CHAMPION ";
-                }
             }
 
             v1_species.add((double) pop.getSpecies().size());
@@ -370,31 +350,24 @@ public class NeatRunner {
         // se I/O Ã¨ da file allora Ã¨ il metodo di acesso ai files che avrÃ  lo
         // stesso nome e che farÃ  la stessa cosa.
 
-        Network _net = null;
+        Network _net;
         boolean success = false;
 
         double errorsum = 0.0;
         int net_depth = 0; //The max depth of the network to be activated
         int count = 0;
 
-
-        //	  			   System.out.print("\n evaluate.step 1 ");
-
-        double in[] = null;
-        in = new double[EnvConstant.NR_UNIT_INPUT + 1];
+        double[] in = new double[EnvConstant.NR_UNIT_INPUT + 1];
 
         // setting bias
 
         in[EnvConstant.NR_UNIT_INPUT] = 1.0;
 
-        double out[][] = null;
-        out = new double[EnvConstant.NUMBER_OF_SAMPLES][EnvConstant.NR_UNIT_OUTPUT];
+        double[][] out = new double[EnvConstant.NUMBER_OF_SAMPLES][EnvConstant.NR_UNIT_OUTPUT];
 
-        double tgt[][] = null;
-        tgt = new double[EnvConstant.NUMBER_OF_SAMPLES][EnvConstant.NR_UNIT_OUTPUT];
+        double[][] tgt = new double[EnvConstant.NUMBER_OF_SAMPLES][EnvConstant.NR_UNIT_OUTPUT];
 
-        Integer ns = new Integer(EnvConstant.NUMBER_OF_SAMPLES);
-
+        int ns = EnvConstant.NUMBER_OF_SAMPLES;
 
         _net = organism.net;
         net_depth = _net.max_depth();
@@ -402,9 +375,7 @@ public class NeatRunner {
         // pass the number of node in genome for add a new
         // parameter of evaluate the fitness
         //
-        int xnn = _net.getAllnodes().size();
-        Integer nn = new Integer(xnn);
-
+        int nn = _net.getAllnodes().size();
 
         try {
             int[] plist_in = new int[2];
@@ -555,7 +526,6 @@ public class NeatRunner {
         EnvConstant.EDIT_STATUS = 0; //TF?
         String nomef = EnvRoutine.getJneatSession();
         logger.sendToLog(" session: wait loading -> " + nomef);
-        StringTokenizer st;
         String xline;
         IOseq xFile;
 
@@ -563,11 +533,11 @@ public class NeatRunner {
         boolean rc = xFile.IOseqOpenR();
         if (rc) {
 
-            StringBuffer sb1 = new StringBuffer("");
+            StringBuilder sb1 = new StringBuilder();
             xline = xFile.IOseqRead();
 
-            while (xline != "EOF") {
-                sb1.append(xline + "\n");
+            while (!xline.equals("EOF")) {
+                sb1.append(xline).append("\n");
                 xline = xFile.IOseqRead();
             }
 
@@ -590,7 +560,6 @@ public class NeatRunner {
         String elem;
         int sz;
         String prev_word;
-        boolean fnd;
 
         try {
             for (int i = 0; i < _source.length; i++) {
@@ -674,24 +643,22 @@ public class NeatRunner {
                     prev_word = null;
                     for (int r = 0; r < sz; r++) {
                         elem = riga.nextToken();
-                        fnd = false;
                         for (int k = 0; k < My_keyword.length; k++) {
                             if (My_keyword[k].equalsIgnoreCase(elem)) {
-                                fnd = true;
                                 break;
                             }
                         }
 
 
                         if ((prev_word != null) && (prev_word.equalsIgnoreCase("data_from_file"))) {
-                            if ((!comment) && elem.equalsIgnoreCase("Y")) {
+                            if (elem.equalsIgnoreCase("Y")) {
                                 EnvConstant.TYPE_OF_SIMULATION = EnvConstant.SIMULATION_FROM_FILE;
                             }
                         }
 
 
                         if ((prev_word != null) && (prev_word.equalsIgnoreCase("data_from_class"))) {
-                            if ((!comment) && elem.equalsIgnoreCase("Y")) {
+                            if (elem.equalsIgnoreCase("Y")) {
                                 EnvConstant.TYPE_OF_SIMULATION = EnvConstant.SIMULATION_FROM_CLASS;
                             }
                         }
@@ -723,9 +690,9 @@ public class NeatRunner {
         String[] source_new = new String[sz];
 
         for (int r = 0; r < sz; r++) {
-            elem = (String) riga.nextToken();
+            elem = riga.nextToken();
             //   System.out.print("\n conv.to.string --> elem["+r+"] --> "+elem);
-            source_new[r] = new String(elem + "\n");
+            source_new[r] = elem + "\n";
         }
         return source_new;
 

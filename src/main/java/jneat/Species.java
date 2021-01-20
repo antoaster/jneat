@@ -52,7 +52,7 @@ public class Species extends Neat {
     /**
      * list of all organisms in the Species
      */
-    Vector organisms = new Vector(1, 0);
+    List<Organism> organisms = new ArrayList<>();
 
     /**
      * how many time from last updt?
@@ -64,80 +64,40 @@ public class Species extends Neat {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getAge() {
         return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
     }
 
     public double getAve_fitness() {
         return ave_fitness;
     }
 
-    public void setAve_fitness(double ave_fitness) {
-        this.ave_fitness = ave_fitness;
-    }
-
     public double getMax_fitness() {
         return max_fitness;
-    }
-
-    public void setMax_fitness(double max_fitness) {
-        this.max_fitness = max_fitness;
     }
 
     public double getMax_fitness_ever() {
         return max_fitness_ever;
     }
 
-    public void setMax_fitness_ever(double max_fitness_ever) {
-        this.max_fitness_ever = max_fitness_ever;
-    }
-
     public int getExpected_offspring() {
         return expected_offspring;
-    }
-
-    public void setExpected_offspring(int expected_offspring) {
-        this.expected_offspring = expected_offspring;
     }
 
     public boolean getNovel() {
         return novel;
     }
 
-    public void setNovel(boolean novel) {
-        this.novel = novel;
-    }
-
     public boolean getChecked() {
         return checked;
     }
 
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
-
-    public Vector getOrganisms() {
+    public List<Organism> getOrganisms() {
         return organisms;
-    }
-
-    public void setOrganisms(Vector organisms) {
-        this.organisms = organisms;
     }
 
     public int getAge_of_last_improvement() {
         return age_of_last_improvement;
-    }
-
-    public void setAge_of_last_improvement(int age_of_last_improvement) {
-        this.age_of_last_improvement = age_of_last_improvement;
     }
 
     /**
@@ -173,7 +133,7 @@ public class Species extends Neat {
      */
     public void adjust_fitness() {
 
-        Iterator itr_organism;
+        Iterator<Organism> itr_organism;
         Organism _organism = null;
         int num_parents = 0;
         int count = 0;
@@ -186,7 +146,7 @@ public class Species extends Neat {
         int size1 = organisms.size();
 
         for (j = 0; j < size1; j++) {
-            _organism = (Organism) organisms.elementAt(j);
+            _organism = organisms.get(j);
 
             //Remember the original fitness before it gets modified
             _organism.orig_fitness = _organism.fitness;
@@ -217,9 +177,9 @@ public class Species extends Neat {
 
         //Update age_of_last_improvement here
         // (the first organism has the best fitness)
-        if (((Organism) organisms.firstElement()).orig_fitness > max_fitness_ever) {
+        if (organisms.get(0).orig_fitness > max_fitness_ever) {
             age_of_last_improvement = age;
-            max_fitness_ever = ((Organism) organisms.firstElement()).orig_fitness;
+            max_fitness_ever = organisms.get(0).orig_fitness;
         }
 
         //Decide how many get to reproduce based on survival_thresh*pop_size
@@ -231,18 +191,20 @@ public class Species extends Neat {
 
         //Mark for death those who are ranked too low to be parents
         //Mark the champ as such
-        ((Organism) organisms.firstElement()).champion = true;
+        organisms.get(0).champion = true;
 
         itr_organism = organisms.iterator();
         count = 1;
+
+        // TODO: is this just a dumb way of counting?
         while (itr_organism.hasNext() && count <= num_parents) {
-            _organism = ((Organism) itr_organism.next());
+            _organism = itr_organism.next();
             count++;
         }
 
         //found organism can be eliminated !
         while (itr_organism.hasNext()) {
-            _organism = ((Organism) itr_organism.next());
+            _organism = itr_organism.next();
             //Mark for elimination
             _organism.eliminate = true;
         }
@@ -407,11 +369,7 @@ public class Species extends Neat {
      * from a list of organisms of this specie
      */
     public void remove_org(Organism org) {
-        boolean rc = false;
-
-
-        int tt1 = 0;
-        rc = organisms.removeElement(org);
+        boolean rc = organisms.remove(org);
         if (!rc)
             System.out.print("\n ALERT: Attempt to remove nonexistent Organism from Species");
     }
@@ -420,9 +378,8 @@ public class Species extends Neat {
     /**
      *
      */
-    public boolean reproduce(int generation, Population pop, Vector sorted_species) {
+    public boolean reproduce(int generation, Population pop, List<Species> sorted_species) {
 
-        boolean found; //When a Species is found
         boolean champ_done = false; //Flag the preservation of the champion
 
         //outside the species
@@ -446,7 +403,6 @@ public class Species extends Neat {
         Organism mom = null;
         Organism baby = null;
         Genome new_genome = null;
-        Network net_analogue = null;
         Organism _organism = null;
         Organism _dad = null;
         Species randspecies = null;
@@ -460,18 +416,15 @@ public class Species extends Neat {
         poolsize = organisms.size() - 1;
 
         // the champion of the 'this' specie is the first element of the specie;
-        thechamp = (Organism) organisms.firstElement();
+        thechamp = organisms.get(0);
 
 
         //Create the designated number of offspring for the Species
         //one at a time
-        boolean outside = false;
-
         for (count = 0; count < expected_offspring; count++) {
 
             mut_struct_baby = false;
             mate_baby = false;
-            outside = false;
 
             if (expected_offspring > Neat.p_pop_size) {
                 System.out.print("\n ALERT: EXPECTED OFFSPRING = " + expected_offspring);
@@ -493,7 +446,7 @@ public class Species extends Neat {
                         new_genome.mutate_link_weight(mut_power, 1.0, NeatConstant.GAUSSIAN);
                     else {
                         //Sometimes we add a link to a superchamp
-                        net_analogue = new_genome.genesis(generation);
+                        Network net_analogue = new_genome.genesis(generation);
                         new_genome.mutate_add_link(pop, Neat.p_newlink_tries);
                         mut_struct_baby = true;
                     }
@@ -523,7 +476,7 @@ public class Species extends Neat {
             } else if ((NeatRoutine.randfloat() < Neat.p_mutate_only_prob) || poolsize == 1) {
                 //Choose the random parent
                 orgnum = NeatRoutine.randint(0, poolsize);
-                _organism = (Organism) organisms.elementAt(orgnum);
+                _organism = (Organism) organisms.get(orgnum);
                 mom = _organism;
                 new_genome = mom.genome.duplicate(count);
 
@@ -535,7 +488,7 @@ public class Species extends Neat {
                     mut_struct_baby = true;
                 } else if (NeatRoutine.randfloat() < Neat.p_mutate_add_link_prob) {
                     //System.out.print("\n ....mutate add link");
-                    net_analogue = new_genome.genesis(generation);
+                    Network net_analogue = new_genome.genesis(generation);
                     new_genome.mutate_add_link(pop, Neat.p_newlink_tries);
                     mut_struct_baby = true;
                 } else {
@@ -581,14 +534,14 @@ public class Species extends Neat {
                 //System.out.print("\n mating .............");
                 orgnum = NeatRoutine.randint(0, poolsize);
 
-                _organism = (Organism) organisms.elementAt(orgnum);
+                _organism = (Organism) organisms.get(orgnum);
                 // save in mom
                 mom = _organism;
                 //Choose random dad
                 //Mate within Species
                 if (NeatRoutine.randfloat() > Neat.p_interspecies_mate_rate) {
                     orgnum = NeatRoutine.randint(0, poolsize);
-                    _organism = (Organism) organisms.elementAt(orgnum);
+                    _organism = (Organism) organisms.get(orgnum);
                     _dad = _organism;
                 }
 
@@ -611,12 +564,11 @@ public class Species extends Neat {
                         randspeciesnum = (int) Math.floor((randmult * (sorted_species.size() - 1.0)) + 0.5);
                         for (sp_ext = 0; sp_ext < randspeciesnum; sp_ext++) {
                         }
-                        randspecies = (Species) sorted_species.elementAt(sp_ext);
+                        randspecies = (Species) sorted_species.get(sp_ext);
                         ++giveup;
                     }
 
-                    _dad = (Organism) randspecies.organisms.firstElement();
-                    outside = true;
+                    _dad = (Organism) randspecies.organisms.get(0);
                 }
 
                 if (NeatRoutine.randfloat() < Neat.p_mate_multipoint_prob) {
@@ -647,7 +599,7 @@ public class Species extends Neat {
                         mut_struct_baby = true;
                     } else if (NeatRoutine.randfloat() < Neat.p_mutate_add_link_prob) {
                         //       System.out.print("\n ....mutate add link2");
-                        net_analogue = new_genome.genesis(generation);
+                        Network net_analogue = new_genome.genesis(generation);
                         new_genome.mutate_add_link(pop, Neat.p_newlink_tries);
                         mut_struct_baby = true;
                     } else {
@@ -717,7 +669,7 @@ public class Species extends Neat {
                     // point _species-esima
                     Species _specie = ((Species) itr_specie.next());
                     // point to first organism of this _specie-esima
-                    compare_org = (Organism) _specie.getOrganisms().firstElement();
+                    compare_org = _specie.getOrganisms().get(0);
                     // compare _organism-esimo('_organism') with first organism in current specie('compare_org')
                     double curr_compat = baby.genome.compatibility(compare_org.genome);
 
@@ -778,11 +730,10 @@ public class Species extends Neat {
         s2 = new StringBuffer("/*-------------------------------------------------------------------*/");
         xFile.IOseqWrite(s2.toString());
 
-        Iterator itr_organism = organisms.iterator();
-        itr_organism = organisms.iterator();
+        Iterator<Organism> itr_organism = organisms.iterator();
 
         while (itr_organism.hasNext()) {
-            Organism _organism = ((Organism) itr_organism.next());
+            Organism _organism = itr_organism.next();
 
             s2 = new StringBuffer("/* Organism #");
             s2.append(fmt4.format(_organism.genome.genome_id));
