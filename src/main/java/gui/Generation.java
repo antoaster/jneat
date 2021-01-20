@@ -703,7 +703,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
         Integer ns = new Integer(EnvConstant.NUMBER_OF_SAMPLES);
 
 
-        _net = organism.net;
+        _net = organism.getNet();
         net_depth = _net.max_depth();
 
         // pass the number of node in genome for add a new
@@ -757,7 +757,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
 
                 // for each sample save each output
                 for (int j = 0; j < EnvConstant.NR_UNIT_OUTPUT; j++)
-                    out[count][j] = ((NNode) _net.getOutputs().elementAt(j)).getActivation();
+                    out[count][j] = ((NNode) _net.getOutputs().get(j)).getActivation();
 
                 // clear net
                 _net.flush();
@@ -862,7 +862,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
             // flag and store only the first winner
 
             Iterator<Organism> itr_organism;
-            itr_organism = pop.organisms.iterator();
+            itr_organism = pop.getOrganisms().iterator();
             double max_fitness_of_winner = 0.0;
 
             while (itr_organism.hasNext()) {
@@ -893,7 +893,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
 
             //compute average and max fitness for each species
             Iterator itr_specie;
-            itr_specie = pop.species.iterator();
+            itr_specie = pop.getSpecies().iterator();
             while (itr_specie.hasNext()) {
                 Species _specie = ((Species) itr_specie.next());
                 _specie.compute_average_fitness();
@@ -924,15 +924,15 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
                 itr_organism = pop.getOrganisms().iterator();
                 while (itr_organism.hasNext()) {
                     Organism _organism = ((Organism) itr_organism.next());
-                    if (_organism.winner) {
-                        name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + generation + "_" + _organism.getGenome().genome_id;
+                    if (_organism.getWinner()) {
+                        name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + generation + "_" + _organism.getGenome().getGenome_id();
                         _organism.getGenome().print_to_filename(name_of_winner);
                         // EnvConstant.SERIAL_WINNER++;
                         conta++;
                     }
                     if (EnvConstant.SUPER_WINNER_) {
                         logger.sendToLog(" generation:      in this generation " + generation + " i have found a SUPER WINNER ");
-                        name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + "_SUPER_" + generation + "_" + _organism.getGenome().genome_id;
+                        name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + "_SUPER_" + generation + "_" + _organism.getGenome().getGenome_id();
                         _organism.getGenome().print_to_filename(name_of_winner);
                         //  EnvConstant.SERIAL_SUPER_WINNER++;
                         EnvConstant.SUPER_WINNER_ = false;
@@ -964,7 +964,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
 
 
                 if (!(EnvConstant.FIRST_ORGANISM_WINNER == null)) {
-                    int idx = ((Organism) EnvConstant.FIRST_ORGANISM_WINNER).genome.genome_id;
+                    int idx = ((Organism) EnvConstant.FIRST_ORGANISM_WINNER).getGenome().getGenome_id();
 
                     if (win)
                         riga1 = "Time : " + generation + " genome (id=" + idx + ") is Current CHAMPION - WINNER ";
@@ -1304,7 +1304,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
         String mask6d = "  0.00000";
         DecimalFormat fmt6d = new DecimalFormat(mask6d);
 
-        Genome _g1 = _o1.genome;
+        Genome _g1 = _o1.getGenome();
 
         Vector v1 = new Vector(1, 0);
         Structure sx = new Structure();

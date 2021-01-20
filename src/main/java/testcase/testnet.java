@@ -196,7 +196,7 @@ public class testnet {
                     // ok : the propagation is completed
                     // for each sample save each output
                     for (int j = 0; j < nr_output; j++) {
-                        out[j] = ((NNode) net.getOutputs().elementAt(j)).getActivation();
+                        out[j] = ((NNode) net.getOutputs().get(j)).getActivation();
                     }
 
                     //display output

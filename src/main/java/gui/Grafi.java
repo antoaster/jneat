@@ -428,7 +428,7 @@ public class Grafi extends JPanel implements ActionListener, ListSelectionListen
                 n = Popx.getOrganisms().size();
                 listdata.clear();
                 for (int j = 0; j < n; j++) {
-                    _ox = (Organism) Popx.getOrganisms().get(j);
+                    _ox = Popx.getOrganisms().get(j);
                     _g1 = _ox.getGenome();
                     _id = _g1.getGenome_id();
                     _s = " Genome_" + _id + " ";
@@ -485,7 +485,7 @@ public class Grafi extends JPanel implements ActionListener, ListSelectionListen
                     ViewGraph(_g1);
 
 
-                s3 = new String(" loaded genome -> " + s2);
+                s3 = " loaded genome -> " + s2;
                 if (_g1.notes != null) {
                     String h2 = s3 + _g1.notes;
                     logger.sendToLog(" grafi: " + h2);

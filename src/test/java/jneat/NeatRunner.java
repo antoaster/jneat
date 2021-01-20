@@ -224,7 +224,7 @@ public class NeatRunner {
             // flag and store only the first winner
 
             Iterator<Organism> itr_organism;
-            itr_organism = pop.organisms.iterator();
+            itr_organism = pop.getOrganisms().iterator();
             double max_fitness_of_winner = 0.0;
 
             while (itr_organism.hasNext()) {
@@ -255,7 +255,7 @@ public class NeatRunner {
 
             //compute average and max fitness for each species
             Iterator<Species> itr_specie;
-            itr_specie = pop.species.iterator();
+            itr_specie = pop.getSpecies().iterator();
             while (itr_specie.hasNext()) {
                 Species _specie = itr_specie.next();
                 _specie.compute_average_fitness();
@@ -286,15 +286,15 @@ public class NeatRunner {
                 itr_organism = pop.getOrganisms().iterator();
                 while (itr_organism.hasNext()) {
                     Organism _organism = itr_organism.next();
-                    if (_organism.winner) {
-                        name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + generation + "_" + _organism.getGenome().genome_id;
+                    if (_organism.getWinner()) {
+                        name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + generation + "_" + _organism.getGenome().getGenome_id();
                         _organism.getGenome().print_to_filename(name_of_winner);
                         // EnvConstant.SERIAL_WINNER++;
                         conta++;
                     }
                     if (EnvConstant.SUPER_WINNER_) {
                         logger.sendToLog(" generation:      in this generation " + generation + " i have found a SUPER WINNER ");
-                        name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + "_SUPER_" + generation + "_" + _organism.getGenome().genome_id;
+                        name_of_winner = EnvRoutine.getJneatTempFile(winner_prefix) + "_SUPER_" + generation + "_" + _organism.getGenome().getGenome_id();
                         _organism.getGenome().print_to_filename(name_of_winner);
                         //  EnvConstant.SERIAL_SUPER_WINNER++;
                         EnvConstant.SUPER_WINNER_ = false;
@@ -369,7 +369,7 @@ public class NeatRunner {
 
         int ns = EnvConstant.NUMBER_OF_SAMPLES;
 
-        _net = organism.net;
+        _net = organism.getNet();
         net_depth = _net.max_depth();
 
         // pass the number of node in genome for add a new
@@ -421,7 +421,7 @@ public class NeatRunner {
 
                 // for each sample save each output
                 for (int j = 0; j < EnvConstant.NR_UNIT_OUTPUT; j++)
-                    out[count][j] = ((NNode) _net.getOutputs().elementAt(j)).getActivation();
+                    out[count][j] = ((NNode) _net.getOutputs().get(j)).getActivation();
 
                 // clear net
                 _net.flush();

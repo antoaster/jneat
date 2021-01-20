@@ -156,14 +156,14 @@ public class Execution {
         Xnet = null;
 
         //generate genome from file
-        Xgenome = new Genome(_genome.genome_id, _genome.getTraits(), _genome.getNodes(), _genome.getGenes());
+        Xgenome = new Genome(_genome.getGenome_id(), _genome.getTraits(), _genome.getNodes(), _genome.getGenes());
 
         //setting the pointer of global genome
 
         EnvConstant.CURR_GENOME_RUNNING = Xgenome;
 
         //generate network
-        Xgenome.genesis(_genome.genome_id);
+        Xgenome.genesis(_genome.getGenome_id());
 
         // net phenotype
         Xnet = Xgenome.getPhenotype();
@@ -357,7 +357,7 @@ public class Execution {
                 // for each sample save each output
                 //
                 for (int j = 0; j < nr_output; j++) {
-                    double v1 = ((NNode) Xnet.getOutputs().elementAt(j)).getActivation();
+                    double v1 = ((NNode) Xnet.getOutputs().get(j)).getActivation();
                     out[count][j] = v1;
                 }
 
@@ -615,7 +615,7 @@ public class Execution {
             // for each sample save each output
             //
             for (int j = 0; j < nr_output; j++) {
-                double v1 = ((NNode) Xnet.getOutputs().elementAt(j)).getActivation();
+                double v1 = ((NNode) Xnet.getOutputs().get(j)).getActivation();
                 out[count][j] = v1;
             }
 

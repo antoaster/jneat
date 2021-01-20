@@ -1804,7 +1804,7 @@ public class Structure {
             weight = _gene.getLnk().getWeight();
 
             boolean recur;
-            if (_gene.getLnk().getIs_recurrent())
+            if (_gene.getLnk().is_recurrent())
                 recur = true;
             else
                 recur = false;
