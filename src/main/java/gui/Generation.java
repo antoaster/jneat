@@ -91,7 +91,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
         GridBagLayout gbl;
         GridBagConstraints limiti;
 
-        logger = new HistoryLog();
+        logger = new SwingGuiLog();
 
         f1 = _f;
 
@@ -268,7 +268,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
         BorderLayout bl = new BorderLayout();
         contentPane.setLayout(bl);
         contentPane.add(pmain, BorderLayout.CENTER);
-        contentPane.add(logger, BorderLayout.SOUTH);
+        contentPane.add((SwingGuiLog)logger, BorderLayout.SOUTH);
 
         EnvConstant.OP_SYSTEM = System.getProperty("os.name");
         EnvConstant.OS_VERSION = System.getProperty("os.version");
@@ -643,6 +643,7 @@ public class Generation extends JPanel implements ActionListener, ItemListener {
             logger.sendToLog(" generation:  READY for other request");
 
         } catch (Throwable e1) {
+            e1.printStackTrace();
             logger.sendToLog(" error in generation.startNeat() " + e1);
         }
 

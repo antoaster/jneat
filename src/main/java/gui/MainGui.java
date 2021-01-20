@@ -17,8 +17,6 @@ import javax.accessibility.*;
 
 
 import javax.swing.JTabbedPane;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 
@@ -82,7 +80,7 @@ public class MainGui extends JPanel {
         a_grafi = new Grafi(_f);
 
 
-        logger = new HistoryLog();
+        logger = new SwingGuiLog();
 
         a_parameter.setLog(logger);
         a_session.setLog(logger);
@@ -132,5 +130,5 @@ public class MainGui extends JPanel {
 
     }
 
-    protected HistoryLog logger;
+    protected SwingGuiLog logger;
 }

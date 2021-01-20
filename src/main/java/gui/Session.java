@@ -2,18 +2,11 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
-import java.awt.image.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
 import java.util.*;
 import java.lang.*;
 
-import jneat.*;
-
 import javax.swing.text.*;
-import java.io.*;
 
 import jNeatCommon.*;
 
@@ -67,7 +60,7 @@ public class Session extends JPanel implements ActionListener {
     String curr_input_data;
     String curr_output_data;
 
-    final static String[] My_keyword =
+    public final static String[] My_keyword =
             {
                     ";",
                     "activation",
@@ -233,7 +226,7 @@ public class Session extends JPanel implements ActionListener {
     public Session(JFrame _f) {
 
 
-        logger = new HistoryLog();
+        logger = new SwingGuiLog();
 
 //		 Font fc = new Font("Dialog", Font.PLAIN, 12);
 
@@ -427,7 +420,7 @@ public class Session extends JPanel implements ActionListener {
         BorderLayout bl = new BorderLayout();
         contentPane.setLayout(bl);
         contentPane.add(pmain, BorderLayout.CENTER);
-        contentPane.add(logger, BorderLayout.SOUTH);
+        contentPane.add((SwingGuiLog)logger, BorderLayout.SOUTH);
 
 
         EnvConstant.OP_SYSTEM = System.getProperty("os.name");

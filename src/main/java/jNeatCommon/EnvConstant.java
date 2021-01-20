@@ -13,13 +13,13 @@ import java.nio.file.Path;
 public class EnvConstant {
 
     // current operating system : "Windows..","Linux..."
-    public static String OP_SYSTEM = " ";
+    public static String OP_SYSTEM = System.getProperty("os.name");
 
     // current version of operating system
-    public static String OS_VERSION = " ";
+    public static String OS_VERSION = System.getProperty("os.version");
 
     // current directory
-    public static String JNEAT_DIR = "c:\\jneat\\dati ";
+    public static String JNEAT_DIR = System.getProperty("user.dir");
 
     // current file name for parameter single without dir o other)
     public static String NAME_PARAMETER = "src\\main\\resources\\parametri";
@@ -49,7 +49,7 @@ public class EnvConstant {
 
     // character for composing full dsn : is a separator for this system
 
-    public static String OS_FILE_SEP = "\\";
+    public static String OS_FILE_SEP = System.getProperty("file.separator");
 
     // name of GENOME 1
 
