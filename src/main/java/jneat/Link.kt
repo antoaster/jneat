@@ -13,8 +13,6 @@ class Link {
 
     var is_recurrent: Boolean
 
-    var time_delay: Boolean
-
     /**
      * Points to a trait of parameters for genetic creation.
      * Is  link-related parameters that change during Hebbian type learning.
@@ -45,7 +43,6 @@ class Link {
         is_recurrent = recur
         added_weight = 0.0
         linktrait = lt
-        time_delay = false
     }
 
     /**
@@ -61,7 +58,6 @@ class Link {
         is_recurrent = recur
         added_weight = 0.0
         linktrait = null
-        time_delay = false
     }
 
     /**
@@ -84,7 +80,6 @@ class Link {
         print(")--<CONNECTION>--o(")
         print(out_node?.node_id?.toString() + ")")
         print(", recurrent=$is_recurrent")
-        print(", tapped=$time_delay")
         if (linktrait != null) linktrait!!.viewtext("\n         (linktrait)-> ") else print("\n         *warning* linktrait for this gene is null ")
     }
     /**

@@ -298,30 +298,11 @@ class NeatRunner(// Input / config
 
                 // load sensor
                 _net.load_sensors(`in`)
-                /*
-           // activate net
-           success = _net.activate();
 
-           // next activation while last level is reached !
-           // use depth to ensure relaxation
-
-           for (int relax = 0; relax <= net_depth; relax++)
-            success = _net.activate();
-           */if (EnvConstant.ACTIVATION_PERIOD == EnvConstant.MANUAL) {
-                    for (relax in 0 until EnvConstant.ACTIVATION_TIMES) {
-                        success = _net.activate()
-                    }
-                } else {
-                    // first activation from sensor to next layer....
-                    success = _net.activate()
-
-                    // next activation while last level is reached !
-                    // use depth to ensure relaxation
-                    for (relax in 0..net_depth) {
-                        success = _net.activate()
-                    }
-                }
-
+                // Maybe need one more?
+                success = (0..net_depth).map {
+                    _net.activate()
+                }.last()
 
                 // for each sample save each output
                 for (j in 0 until EnvConstant.NR_UNIT_OUTPUT) out[count]!![j] = _net.outputs[j].activation

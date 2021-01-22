@@ -273,15 +273,6 @@ class NNode {
         return if (activation_count > 0) activation else 0.0
     }
 
-    /**
-     * Return activation currently in node
-     * from PREVIOUS (time-delayed) time step,
-     * if there is one
-     */
-    fun get_active_out_td(): Double {
-        return if (activation_count > 1) last_activation else 0.0
-    }
-
     fun op_view() {
         val maskf = " #,##0"
         val fmtf = DecimalFormat(maskf)

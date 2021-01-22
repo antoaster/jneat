@@ -23,6 +23,8 @@ class JneatRegressionTest {
         val lastGenerationWinnersFitness = neatRunner.lastGenerationWinnersFitness
         val lastGenerationSpeciesSomething = neatRunner.lastGenerationSpeciesSomething
 
+
+        println("Fitnesses: ${lastGenerationWinnersFitness.takeLast(10)}")
         val maxFitness: Double = lastGenerationWinnersFitness.maxOrNull()!!
         assertThat(maxFitness, greaterThan(10.0))
 

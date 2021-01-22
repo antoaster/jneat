@@ -3,7 +3,6 @@ package jneat
 
 import jNeatCommon.NeatConstant
 import jNeatCommon.NeatRoutine
-import java.util.*
 
 class Network(
         /**
@@ -22,118 +21,63 @@ class Network(
          */
         var allnodes: List<NNode>, xnet_id: Int) {
 
-    /**
-     * is a reference to genotype can has  originate this fenotype
-     */
     var genotype: Genome? = null
 
-    /**
-     * Is a name of this network
-     */
     var name: String? = null
 
-    /**
-     * Numeric identification of this network
-     */
     var net_id: Int
 
-    /**
-     * Number of NNodes of this net
-     */
     var numnodes: Int
 
-    /**
-     * Number of Link  in this net
-     */
     var numlinks: Int
-    fun activate(): Boolean {
-        var itr_node: Iterator<*>
-        var itr_link: Iterator<*>
-        val tmpsum = 0.0
-        var add_amount = 0.0 //For adding to the activesum
-        var onetime = false //Make sure we at least activate once
-        var abortcount = 0 //Used in case the output is somehow
-        val tmpdouble = 0.0
-        while (outputsoff() || !onetime) {
-            ++abortcount
-            if (abortcount >= 30) {
-                print("\n *ERROR* Inputs disconnected from output!")
 
-// 05.06.2002 commented 			   
-//			   genotype.op_view();
-//			   System.exit(4);
+    var status: Int
+
+    fun activate(): Boolean {
+        var abortcount = 0
+
+        // push values through the network until all of the output nodes have been updated
+        do {
+            if (++abortcount > 30) {
+                print("\n *ERROR* Inputs disconnected from output!")
                 return false
             }
-
-            // For each node, compute the sum of its incoming activation
-            itr_node = allnodes.iterator()
-            while (itr_node.hasNext()) {
-                val _node = itr_node.next() as NNode
-                if (_node.type != NeatConstant.SENSOR) {
-                    _node.activesum = 0.0 // reset activation value
-                    _node.active_flag = false // flag node disabled
-                    itr_link = _node.incoming.iterator()
-                    while (itr_link.hasNext()) {
-                        val _link = itr_link.next() as Link
-                        if (!_link.time_delay) {
-                            add_amount = _link.weight * _link.in_node.get_active_out()
-                            if (_link.in_node.active_flag || _link.in_node.type == NeatConstant.SENSOR) _node.active_flag = true
-                            _node.activesum += add_amount
-                        } else {
-                            add_amount = _link.weight * _link.in_node.get_active_out_td()
-                            _node.activesum += add_amount
-                        }
-                    } //End for over incoming links
-                } //End if _node.type !=SENSOR
-            } //End for over all nodes
-
-            // Now activate all the non-sensor nodes off their incoming activation
-            itr_node = allnodes.iterator()
-            while (itr_node.hasNext()) {
-                val _node = itr_node.next() as NNode
-                if (_node.type != NeatConstant.SENSOR) {
-                    //Only activate if some active input came in
-                    if (_node.active_flag) {
-                        _node.last_activation2 = _node.last_activation
-                        _node.last_activation = _node.activation
-                        if (_node.ftype == NeatConstant.SIGMOID) _node.activation = NeatRoutine.fsigmoid(_node.activesum, 4.924273, 2.4621365)
-                        _node.activation_count += 1.0
-                    }
-                }
-            }
-            onetime = true
-        }
+            stepNetwork()
+        } while (outputsoff())
         return true
     }
 
-    fun flush() {
-        val itr_node: Iterator<*>
-
-/*
-// old version
-		 itr_node = outputs.iterator();
-		 while (itr_node.hasNext()) 
-		 {
-			NNode _node = ((NNode) itr_node.next());
-			_node.flushback();
-		 }
-*/
-// new version : the number of connection >> num of node defined
-// thus is good to reset all nodes without respect connection
-        itr_node = allnodes.iterator()
-        while (itr_node.hasNext()) {
-            val _node = itr_node.next() as NNode
-            _node.resetNNode()
+    private fun stepNetwork() {
+        // For each node, compute the sum of its incoming activation
+        allnodes.forEach { _node ->
+            _node.incoming.forEach { _link ->
+                val add_amount = _link.weight * _link.in_node.get_active_out()
+                if (_link.in_node.active_flag || _link.in_node.type == NeatConstant.SENSOR) _node.active_flag = true
+                _node.activesum += add_amount
+            }
         }
+
+        // Now activate all the non-sensor nodes off their incoming activation
+
+        allnodes.filter { it.type != NeatConstant.SENSOR }
+                .filter { it.active_flag }
+                .forEach { _node ->
+                    _node.last_activation2 = _node.last_activation
+                    _node.last_activation = _node.activation
+
+                    // TODO: use a pluggable activation function here.
+                    if (_node.ftype == NeatConstant.SIGMOID) _node.activation = NeatRoutine.fsigmoid(_node.activesum, 4.924273)
+                    _node.activation_count += 1.0
+                }
+    }
+
+    fun flush() {
+        allnodes.forEach { it.resetNNode() }
     }
 
     fun load_sensors(sensvals: DoubleArray) {
-        var counter = 0
-        val itr_node: Iterator<*>
-        itr_node = inputs.iterator()
-        while (itr_node.hasNext()) {
-            val _node = itr_node.next() as NNode
-            if (_node.type == NeatConstant.SENSOR) _node.sensor_load(sensvals[counter++])
+        inputs.forEachIndexed {index, nNode ->
+            nNode.sensor_load(sensvals[index])
         }
     }
 
@@ -160,66 +104,14 @@ class Network(
         return max
     }
 
-    fun outputsoff(): Boolean {
-        var itr_node: Iterator<*> = outputs.iterator()
-        itr_node = outputs.iterator()
-        while (itr_node.hasNext()) {
-            val _node = itr_node.next() as NNode
-            if (_node.activation_count == 0.0) return true
-        }
-        return false
-    }
-
-    fun viewAllNodes(s: String?) {
-        println(s)
-        print("\n\t - List of all nodes -")
-        val itr_node: Iterator<*>
-        itr_node = allnodes.iterator()
-        while (itr_node.hasNext()) {
-            val _node = itr_node.next() as NNode
-            if (_node.active_flag) _node.op_view()
-        }
-        print("\n\t - end list of all nodes -")
-    }
-
-    /**
-     * are user for working scope ; at this moment
-     * is utilized for returning code of a search if recurrency
-     * if ==  8 , the net has a loop ;
-     */
-    var status: Int
-    fun count_motor(): Int {
-        var counter = 0
-        val itr_node: Iterator<*>
-
-        // count # motor
-        itr_node = outputs.iterator()
-        while (itr_node.hasNext()) {
-            val _node = itr_node.next() as NNode
-            counter++
-        }
-        return counter
-    }
-
-    fun count_sensor(): Int {
-        var counter = 0
-        val itr_node: Iterator<*>
-        itr_node = inputs.iterator()
-        while (itr_node.hasNext()) {
-            val _node = itr_node.next() as NNode
-            if (_node.type == NeatConstant.SENSOR) counter++
-        }
-        return counter
-    }
+    fun outputsoff() = outputs.any { it.activation_count == 0.0 }
 
     fun has_a_path(potin: NNode, potout: NNode, level: Int, threshold: Int): Boolean {
-        var _node: NNode? = null
+
+                // mama mia, why does this affect state?
 
         // reset all link to state no traversed
-        for (j in allnodes.indices) {
-            _node = allnodes.elementAt(j) as NNode
-            _node.is_traversed = false
-        }
+        allnodes.forEach { it.is_traversed = false }
 
         // call the control if has a link intra node potin , potout
         return is_recur(potin, potout, level, threshold)
@@ -300,6 +192,8 @@ class Network(
      * if activation of output nodes remain stable for 'period'
      * interval , return the difference from total cycle and
      * time passed from fist level stable.
+     *
+     * mama mia, this seems to have a copy of a bunch of the code I've already been trying to remove.
      */
     fun is_stabilized(period: Int): Int {
         var period = period
@@ -352,16 +246,11 @@ class Network(
                     itr_link = _node.incoming.iterator()
                     while (itr_link.hasNext()) {
                         val _link = itr_link.next() as Link
-                        if (!_link.time_delay) {
-                            add_amount = _link.in_node.get_active_out()
-                            if (_link.in_node.active_flag || _link.in_node.type == NeatConstant.SENSOR) {
-                                _node.active_flag = true
-                            }
-                            _node.activesum += add_amount
-                        } else {
-                            add_amount = _link.in_node.get_active_out_td()
-                            _node.activesum += add_amount
+                        add_amount = _link.in_node.get_active_out()
+                        if (_link.in_node.active_flag || _link.in_node.type == NeatConstant.SENSOR) {
+                            _node.active_flag = true
                         }
+                        _node.activesum += add_amount
                     } //End for over incoming links
                 } //End if _node.type !=SENSOR
             } //End for over all nodes
